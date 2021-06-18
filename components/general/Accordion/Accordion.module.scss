@@ -1,0 +1,48 @@
+$basic-color: #03a9f4;
+$basic-color-hover: #0288d1;
+
+.Accordion{
+    padding: 5px;
+    border: 1px solid #e3e3e3;
+
+    .AccordionHeader{
+        display: flex;
+        background-color: #f3f3f3;
+        border-radius: 3px;
+        margin-bottom: 5px;
+        cursor: pointer;
+
+        &>div{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 15%;
+
+            img{
+                width: 15px;
+            }
+        }
+
+        p{
+            width: 85%;
+            font-weight: 500;
+            color: $basic-color;
+        }
+
+        &:hover{
+            background-color: #e7e7e7;
+            
+            p{
+                color: $basic-color-hover;
+            }
+        }
+    }
+
+    .AccordionBody{
+        display: none;
+
+        &.showBody{
+            display: block;
+        }
+    }
+}

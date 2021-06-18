@@ -1,0 +1,74 @@
+$basic-color-hover: #0288d1;
+
+.MultipleSelector{
+    border: 1px solid #e7e7e7;
+    border-radius: 5px;
+    background-color: #fff;
+
+    .searchBar{
+        padding: 10px 0px;
+        border-bottom: 2px solid #e0e0e0;
+
+        input[type=text]{
+            display: block;
+            width: 90%;
+            margin: auto;
+            background: #f0f0f0;
+            padding: 8px 5px;
+            border-radius: 3px;
+            border: none;
+            outline: none;
+
+            &:focus{
+                border-bottom: 2px solid $basic-color-hover;
+            }
+        }
+    }
+
+    .itens{
+        min-height: 10px;
+        max-height: 300px;
+        overflow-y: scroll;
+
+        ul {
+            list-style: none;
+            padding: 5px 10px;
+
+            li {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                text-align: left;
+                padding: 10px 5px;
+                border-top: 1px solid #e0e0e0;
+                cursor: pointer;
+
+                input[type=checkbox]{
+                    width: 20px;
+                    height: 20px;
+                    cursor: pointer;
+                }
+
+                label{
+                    padding-left: 10px;
+                    margin: 0px;
+                    cursor: pointer;
+                }
+
+                &:hover{
+                    label{
+                        color: $basic-color-hover;;
+                    }
+
+                    input[type=checkbox]{
+                        border-color: $basic-color-hover;;
+                    }
+                }
+            }
+
+            li:first-child{
+                border-top: none;
+            }
+        }
+    }
+}

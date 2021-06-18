@@ -1,0 +1,28 @@
+.Accordion{​​​​​​​
+    .AccordionHeader{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+
+        p{
+            width: 90%;
+        }​​​​​​​
+
+
+        img{
+            display: block;
+            width: 10%
+        }
+    }​​​​​​​
+
+
+    .AccordionBody{
+        display: none;
+
+
+        &.showBody{
+            display: block;
+        }
+    }
+}

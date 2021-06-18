@@ -1,0 +1,22 @@
+$basic-color: #0288d1;
+
+.SearchResults{
+
+    .header{
+        background-color: $basic-color;
+        margin: 0;
+        padding: 5px;
+
+        p{
+            margin: 0;
+            padding: 0px 5px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        span{
+            font-weight: 400;
+            font-size: 12px;
+        }
+    }
+}
