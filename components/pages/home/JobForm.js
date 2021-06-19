@@ -23,7 +23,7 @@ export default function JobForm(props) {
         event.preventDefault();
         const preSlug = `${ search } ${ region ? "em": "" } ${region ? region : ""}`;
         const slug = string_to_slug(preSlug); 
-        router.push(`http://localhost:3000/vagas/${ slug }`);
+        router.push(`/vagas/${ slug }`);
     }
 
     const getRegionOptions = () => {
