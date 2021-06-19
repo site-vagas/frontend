@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "heroku-postbuild": "npm run build"
+
   },
   "dependencies": {
     "alasql": "^1.7.2",
