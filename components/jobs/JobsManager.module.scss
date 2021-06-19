@@ -207,8 +207,13 @@ $basic-color: #0288d1;
                         display: flex;
                         justify-content: center;
                         align-items: center;
+                        
+                        position: sticky;
+                        top: 0;
+
+                        background-color: #fff;
                         padding: 15px 10px;
-                        border-bottom: 1px solid #868686;
+                        border-bottom: 2px solid #464646;
                         margin-bottom: 15px;
                         
                         &>p:first-child{

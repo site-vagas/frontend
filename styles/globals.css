@@ -2,6 +2,20 @@ html{
   background-color: #f3f3f3;
 }
 
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(182, 182, 182); 
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(148, 148, 148); 
+}
+
+
 body {
   background-color: #fff;
   padding: 0;

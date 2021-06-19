@@ -91,7 +91,6 @@ export async function getStaticProps({ params }){
     jobs = await fetch(`https://site-vagas.herokuapp.com/jobs/get/`);
     jobs = await jobs.json();
 
-    console.log('query: ', query, city, state)
     return {
         props: {
             jobs

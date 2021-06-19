@@ -127,19 +127,50 @@ export default function JobsManager(props){
             benefits: getIds(tables.benefits),
             types: getIds(tables.types)
         });
+
+        // const [filters, setFilters] = useState({
+        //     states: [],
+        //     cities: [],
+        //     organizations: [],
+        //     categories: [],
+        //     subCategories: [],
+        //     roles: [],
+        //     benefits: [],
+        //     types: []
+        // });
+
+
+    // console.log('Tabelas:', tables);
+    // console.log('Filters:', filters);
     
     const handleFilterChange = (item, values) => {
         var tempFilters = {...filters};
         tempFilters[item] = values;
+        console.log("Changing Filters: ", item, values)
         setFilters(tempFilters);
     }
 
     const buildFilterList = (item) => {
-        const list = filters[item].map( (i) => {
+        var list;
+        list = filters[item].map( (i) => {
             return `'${i}'`
         });
         return list
     }
+
+    // const buildFilterList = (item) => {
+    //     var list;
+    //     if( filters[item].length === 0 ){
+    //         list = getIds(tables[item]).map( (i) => {
+    //             return `'${i}'`
+    //         });
+    //     } else {
+    //         list = filters[item].map( (i) => {
+    //             return `'${i}'`
+    //         });
+    //     }
+    //     return list
+    // }
 
     const search = () => {
         const data = alasql(`
