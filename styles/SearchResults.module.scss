@@ -1,9 +1,17 @@
 $basic-color: #0288d1;
 
 .SearchResults{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+
+    min-height: 100vh;
+    max-height: 100vh;
 
     .header{
         background-color: $basic-color;
+        width: 100%;
         margin: 0;
         padding: 5px;
 

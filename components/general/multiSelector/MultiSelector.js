@@ -18,6 +18,8 @@ export default class MultipleSelector extends Component {
         this.getItensList = this.getItensList.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleItemSelection = this.handleItemSelection.bind(this);
+        this.selectAll = this.selectAll.bind(this);
+        this.unselectAll = this.unselectAll.bind(this);
     }
 
     componentDidUpdate(prevProps){
@@ -32,8 +34,13 @@ export default class MultipleSelector extends Component {
     
     handleItemSelection(event){
         var selectedItens = this.state.selectedItens;
-        const eventValue = event.target.value.toString().toLocaleLowerCase();
-        selectedItens.includes(eventValue) ? selectedItens = selectedItens.filter(item => { return  item !== eventValue }) : selectedItens.push(eventValue);
+        const eventValue = event.target.value;
+        
+        if ( selectedItens.includes(eventValue) ){
+            selectedItens = selectedItens.filter(item => { return  item !== eventValue })
+        } else {
+            selectedItens.push(eventValue)
+        }
         this.propagationFunction(selectedItens);
         this.setState({selectedItens: selectedItens});
     }
@@ -42,9 +49,9 @@ export default class MultipleSelector extends Component {
         const selectedItens = this.state.selectedItens;
         const handleItemSelection = this.handleItemSelection;
         const listName = this.state.name;
-        
+
         function ItemList (props){
-            const itemSelected = selectedItens.includes(props.value.toString().toLocaleLowerCase());
+            const itemSelected = selectedItens.includes(props.value);
             return (
                 <li>
                     <input
@@ -83,11 +90,41 @@ export default class MultipleSelector extends Component {
         }
     }
 
+    selectAll(){
+        const allItens = this.state.allItens.map( (item) => {
+            return item[this.props.itemKey]
+        })
+
+        this.propagationFunction(allItens);
+        this.setState({
+            ...this.state,
+            selectedItens: allItens
+        });
+    }
+
+    unselectAll(){
+        this.propagationFunction([]);
+        this.setState({
+            ...this.state,
+            selectedItens: []
+        });
+    }
+
     render(){
+
         return(
             <div className={ styles.MultipleSelector }>
                 <div className={ styles.searchBar }>
                     <input type="text" placeholder="Pesquise aqui" onChange={ this.handleSearch }/>
+                </div>
+
+                <div className={ styles.helpers }>
+                    <div>
+                        <span onClick={ this.selectAll }>Selecionar Todos</span>
+                    </div>
+                    <div>
+                        <span onClick={ this.unselectAll }>Desmarcar Tudo</span>
+                    </div>
                 </div>
 
                 <div className={ styles.itens }>

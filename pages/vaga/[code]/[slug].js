@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { useRef, useState, useEffect } from 'react';
 import styles from './../../../styles/JobPage.module.scss';
 import RelatedJob from '../../../components/pages/job/RelatedJobs';
+import { route } from 'next/dist/next-server/server/router';
 
 function Job({ job, relatedJobs }){
     const router = useRouter();
@@ -30,6 +31,14 @@ function Job({ job, relatedJobs }){
         }
     })
 
+    const handleCloseButton_jobWindow = () => {
+        if( document.referrer === "" ) {
+            router.push("/");
+        } else {
+            router.push( document.referrer );
+        }
+    }
+
     const handleApplyButtonClick = () => {
         setapplyWindow_display(true);
     }
@@ -43,7 +52,7 @@ function Job({ job, relatedJobs }){
         <div className={styles.JobPage}>
             <div className={`${ applyWindow_display ? styles.bluredContent : "" }`}>
                 <div className={styles.closeButton}>
-                    <p>X</p>
+                    <p onClick={ handleCloseButton_jobWindow }>X</p>
                 </div>
 
                 {/* Header */}
@@ -175,7 +184,7 @@ function Job({ job, relatedJobs }){
 }
 
 export async function getStaticPaths(){
-    const resp = await fetch(`https://site-vagas.herokuapp.com/jobs/slugs`, { method: 'POST' });
+    const resp = await fetch(`https://site-vagas.herokuapp.com/jobs/slugs`);
     const jobs =  await resp.json();
 
     const paths = jobs.map( (job) => ({
@@ -207,7 +216,10 @@ export async function getStaticProps({ params }){
     }
 
     return {
-        props: { job, relatedJobs },
+        props: { 
+            job,
+            relatedJobs,
+        },
         revalidate: 86400
     }
 }

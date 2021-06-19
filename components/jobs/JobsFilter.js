@@ -3,6 +3,8 @@ import { AccordionGroup, Accordion } from './../../components/general/Accordion/
 
 export default function JobsFilter(props){
 
+    const handleSelection_State = (itens) => { props.changesHandler( 'states', itens ) }
+    const handleSelection_City = (itens) => { props.changesHandler( 'cities', itens ) }
     const handleSelection_Organization = (itens) => { props.changesHandler( 'organizations', itens ) }
     const handleSelection_Category = (itens) => { props.changesHandler( 'categories', itens ) }
     const handleSelection_Benefits = (itens) => { props.changesHandler( 'benefits', itens ) }
@@ -10,11 +12,36 @@ export default function JobsFilter(props){
     const handleSelection_Types = (itens) => { props.changesHandler( 'types', itens ) }
 
     return (
-        <div className="JobsFilter">
-            <p>Filtre as Vagas</p>
+        <div className={ props.className }>
+            <div>
+                <p>Filtre as Vagas</p>
+                <p onClick={ props.handleClose }>X</p>
+            </div>
             
-            <AccordionGroup>            
-                <Accordion title="Empresas" actived={true}>
+            <AccordionGroup>
+            <Accordion title="Estados" actived={ true }>
+                    <MultiSelector
+                        name="job_states"
+                        itens={ props.states.itens }
+                        itemKey="id"
+                        itemName="name"
+                        selectedItens={ props.states.selected }
+                        propagationFunction={ handleSelection_State }
+                    />
+                </Accordion>
+                
+                <Accordion title="Cidades">
+                    <MultiSelector
+                        name="job_cities"
+                        itens={ props.cities.itens }
+                        itemKey="id"
+                        itemName="name"
+                        selectedItens={ props.cities.selected }
+                        propagationFunction={ handleSelection_City }
+                    />
+                </Accordion>
+
+                <Accordion title="Empresas">
                     <MultiSelector
                         name="job_organizations"
                         itens={ props.organizations.itens }

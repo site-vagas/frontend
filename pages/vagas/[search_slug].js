@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import JobsList from '../../components/jobs/jobsList';
+import JobsManager from '../../components/jobs/JobsManager';
 import styles from './../../styles/SearchResults.module.scss';
 
 function Jobs({ jobs }) {
@@ -16,7 +16,7 @@ function Jobs({ jobs }) {
                 </Link>
             </div>
 
-            <JobsList jobs={ jobs } />
+            <JobsManager jobs={ jobs } />
         </div>
     )
 }

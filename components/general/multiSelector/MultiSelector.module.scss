@@ -1,3 +1,4 @@
+$basic-color: #03a9f4;
 $basic-color-hover: #0288d1;
 
 .MultipleSelector{
@@ -21,6 +22,21 @@ $basic-color-hover: #0288d1;
 
             &:focus{
                 border-bottom: 2px solid $basic-color-hover;
+            }
+        }
+    }
+
+    .helpers{
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 15px;
+        span{
+            font-size: 12px;
+            cursor: pointer;
+            color: $basic-color;
+            &:hover{
+                color: $basic-color-hover;
+                text-decoration: underline;
             }
         }
     }
