@@ -1,9 +1,8 @@
 import { useRouter } from 'next/router';
-import Image from 'next/image';
+import Head from 'next/head';
 import { useRef, useState, useEffect } from 'react';
 import styles from './../../../styles/JobPage.module.scss';
 import RelatedJob from '../../../components/pages/job/RelatedJobs';
-import { route } from 'next/dist/next-server/server/router';
 
 function Job({ job, relatedJobs }){
     const router = useRouter();
@@ -31,6 +30,46 @@ function Job({ job, relatedJobs }){
         }
     })
 
+    const getPageHead = () => {
+        // Build the Page Title
+        var isHomeOfficeJob = false;
+        for(let type of job.__types__){
+            if( type.id === process.env.HOME_OFFICE_TYPE_ID ){
+                isHomeOfficeJob = true;
+            }
+        };
+
+        var pagetitle;
+        if( isHomeOfficeJob ){
+            pagetitle = `Vaga Remota - ${ job.title } em ${ job.__organization__.name }`;
+        } else {
+            pagetitle = `Vaga - ${ job.title } em ${ job.__organization__.name }`;
+        }
+
+        function buildMetaArticleTags(){
+            return job.__subCategories__.map( (sc) =>{
+                return <meta property="og:article:tag" content={ sc.name } />
+            })
+        }
+
+        return(
+            <Head>
+                <title>{ pagetitle }</title>
+                <meta name="description" content={ `Vaga de emprego em ${ job.__organization__.name } em ${ job.city } - ${ job.state }. Candita-se gratuitamente no Tickun.com.br` } />
+
+                <meta property="og:url" content={ router.pathname } />
+                <meta property="og:title" content={ pagetitle } />
+                <meta property="og:description" content={ `Vaga de emprego em ${ job.city } - ${ job.state }` } />
+                <meta property="og:image" content={ job.__organization__.logoUrl } />
+                <meta property="og:image:alt" content={ job.__organization__.name } />
+                <meta property="og:type" content="article" />
+                <meta property="og:article:author" content={ job.__organization__.name } />
+                <meta property="og:article:section" content={ job.__category__.name } />
+                { buildMetaArticleTags() }
+            </Head>
+        )
+    }
+
     const handleCloseButton_jobWindow = () => {
         if( document.referrer === "" ) {
             router.push("/");
@@ -50,6 +89,9 @@ function Job({ job, relatedJobs }){
     if ( router.isFallback ) { return <>Carregando...</> }
     return(
         <div className={styles.JobPage}>
+            
+            { getPageHead() }
+
             <div className={`${ applyWindow_display ? styles.bluredContent : "" }`}>
                 <div className={styles.closeButton}>
                     <p onClick={ handleCloseButton_jobWindow }>X</p>
@@ -60,8 +102,7 @@ function Job({ job, relatedJobs }){
                     <div className={styles.jobTitle}>
                         <h1>{ job.title }</h1>
                     </div>
-
-                    <div className={styles.jobPlace}>
+                    <div className={styles.jobHeader}>
                         <div>
                             <img
                                 src={job.__organization__.logoUrl}
@@ -78,6 +119,10 @@ function Job({ job, relatedJobs }){
                                 <p>
                                     <span>{job.city}</span>
                                     <span>{job.state}</span>
+                                </p>
+                                <p>
+                                    <span>Salário: </span>
+                                    <span>{ job.salary && job.salary > 0 ? `R$ ${ job.salary.toLocaleString() }` : "A Combinar" }</span>
                                 </p>
                             </div>
                         </div>

@@ -34,7 +34,7 @@ $basic-color-hover: #0288d1;
         }
     }
     
-    .jobPlace{
+    .jobHeader{
 
         display: grid;
         grid-template-columns: 25% 75%;        
@@ -43,23 +43,27 @@ $basic-color-hover: #0288d1;
             display: flex;
             justify-content: center;
             align-items: center;
+
+            img {
+                object-fit: contain;
+            }
         }
 
         &>div:last-child{
-
+            // Job Role
             p:first-child{
                 font-size: 16px;
                 color: #434343;
                 margin: 0px;
                 padding: 0px;
             }
-
+            // Organization
             p:nth-child(2){
                 font-size: 22px;
                 margin: 5px 0px;
             }
-
-            p:last-child{
+            // Region
+            p:nth-child(3){
                 font-size: 16px;
                 color: #7777;
                 margin-top: 5px;
@@ -67,6 +71,11 @@ $basic-color-hover: #0288d1;
                 & span:last-child{
                     margin-left: 6px;
                 }
+            }
+
+            p:last-child{
+                font-weight: bold;
+                color: #42af42;
             }
         }
     }
@@ -150,6 +159,12 @@ $basic-color-hover: #0288d1;
         -o-filter: blur(5px);
         -ms-filter: blur(5px);
         filter: blur(5px);
+        position: fixed;
+        top: 0;
+
+        div {
+            max-width: 90vw;
+        }
     }
 
     .applyWindow{
@@ -291,9 +306,21 @@ $basic-color-hover: #0288d1;
     }
 }
 
-@media only screen and (min-width: 800px){
+@media screen and (min-width: 800px){
     .JobPage{
         border-left: 1px solid #e3e3e3;
         border-right: 1px solid #e3e3e3;
+
+        .jobTitle, .jobHeader{
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+
+    .bluredContent{
+        div{
+            max-width: 1170px !important;
+        }
     }
 }

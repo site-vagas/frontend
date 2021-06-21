@@ -9,7 +9,6 @@ function Home({ allRegions }) {
       <Head>
         <title>Tickun - Encontre as melhores Vagas</title>
         <meta name="description" content="Encontre as melhores Vagas no Mercado. A sua nova oportunidade está aqui." />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>

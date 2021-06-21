@@ -5,7 +5,7 @@ export default function JobHorizontal(props){
         <div className={ props.className }>
             <div>
                 <div>
-                    <img src={ props.job.logoUrl }/>
+                    <img src={ props.job.logoUrl } alt={ props.job.organizationName }/>
                 </div>
 
                 <div>

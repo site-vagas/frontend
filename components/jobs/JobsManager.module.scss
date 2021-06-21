@@ -1,4 +1,5 @@
-$basic-color: #0288d1;
+$basic-color: #03a9f4;
+$basic-color-hover: #0288d1;
 
 .JobsManager{
     display: flex;
@@ -54,6 +55,18 @@ $basic-color: #0288d1;
             overflow-y: auto;
     
             border-right: 1px solid #e7e7e7;
+
+            p[item=clearFilter]{
+                color: $basic-color;
+                text-decoration: underline;
+                cursor: pointer;
+
+                margin-left: 20px;
+
+                &:hover{
+                    color: $basic-color-hover;
+                }
+            }
 
             &>div:first-child{
                 display: flex;
@@ -186,7 +199,6 @@ $basic-color: #0288d1;
                 }
             }
         }
-
 
         .ContentBox{
             .JobsFilter{
