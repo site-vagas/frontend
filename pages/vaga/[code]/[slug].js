@@ -71,10 +71,10 @@ function Job({ job, relatedJobs }){
     }
 
     const handleCloseButton_jobWindow = () => {
-        if( document.referrer === "" ) {
+        if( window.history.length === 1 ) {
             router.push("/");
         } else {
-            router.push( document.referrer );
+            router.back();
         }
     }
 

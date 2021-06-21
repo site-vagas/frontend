@@ -1,6 +1,13 @@
 import Link from 'next/link';
 import Jobs from '../../pages/vagas/[search_slug]';
+import { useRouter } from 'next/router';
+
 export default function JobHorizontal(props){
+
+    const getJobUrl = () => {
+        return `/vaga/${ props.job.code }/${ props.job.slug }`
+    }
+
     return(
         <div className={ props.className }>
             <div>
@@ -9,7 +16,7 @@ export default function JobHorizontal(props){
                 </div>
 
                 <div>
-                    <Link href={`/vaga/${ props.job.code }/${ props.job.slug }`}>
+                    <Link href={ getJobUrl() }>
                         <a>{ props.job.title }</a>
                     </Link>
                     <p>{ props.job.role }</p>
