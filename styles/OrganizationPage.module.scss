@@ -1,0 +1,40 @@
+.Organization{
+    
+    .Header{
+        padding: 20px 20px;
+
+        &>div:first-child{
+            padding: 10px 20px;
+            margin: auto;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            &>div:first-child{
+                border-right: 1px solid #e3e3e3;
+                margin-right: 20px;
+                padding-right: 20px;
+                img{
+                    display: inline-block;
+                    width: 30vw;
+                    height: 30vw;
+                    max-width: 150px;
+                    max-height: 150px;
+                }
+            }
+
+            &>div:last-child{
+                p{
+                    font-size: 32px;
+                }
+            }
+
+        }
+    }
+
+    h2{
+        font-weight: 400;
+        font-size: 24px;
+    }
+}

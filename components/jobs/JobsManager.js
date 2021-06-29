@@ -2,8 +2,9 @@ import { useState } from "react";
 import Image from 'next/image';
 import JobHorizontal from "./JobHorizontal";
 import styles from './JobsManager.module.scss';
-import JobsFilter from "./JobsFilter";
 import alasql from 'alasql';
+import Link from 'next/link';
+import JobsFilter from './JobsFilter';
 
 export default function JobsManager(props){
 
@@ -37,69 +38,81 @@ export default function JobsManager(props){
             var auxBuild_role = [];
             var auxBuild_benefit = [];
             var auxBuild_type = [];
-            // Keys to remove from Job Table to Normalize
-            const keys_to_remove_from_jobs = [
-                "__subCategories__",
-                "__benefits__",
-                "__types__",
-                "__organization__",
-                "__category__",
-                "__role__"
-            ]        
+        // Keys to remove from Job Table to Normalize
+        const keys_to_remove_from_jobs = [
+            "__subCategories__",
+            "__benefits__",
+            "__types__",
+            "__organization__",
+            "__category__",
+            "__role__"
+        ]        
       
         // Build Tables
         for( let job of props.jobs ){
             // Build Tables
                 // State
-                if( !auxBuild_state.includes(job.state) ){
+                if( props.filters.includes('state') && !auxBuild_state.includes(job.state) ){
                     tables.state.push({ id: job.state, name: job.state });
                     auxBuild_state.push( job.state );
                 };
                 // Cities
-                if( !auxBuild_city.includes(job.city) ){
+                if( props.filters.includes('city') && !auxBuild_city.includes(job.city) ){
                     tables.city.push({ id: job.city, name: job.city });
                     auxBuild_city.push( job.city );
                 };
                 // Organizations
-                tables.rel_job_and_organization.push({ jobId: job.id, organizationId: job.__organization__.id });
-                if( !auxBuild_organization.includes(job.__organization__.id) ) {
-                    tables.organization.push( job.__organization__ );
-                    auxBuild_organization.push( job.__organization__.id );
-                };
+                if(props.filters.includes('organization')){
+                    tables.rel_job_and_organization.push({ jobId: job.id, organizationId: job.__organization__.id });
+                    if( !auxBuild_organization.includes(job.__organization__.id) ) {
+                        tables.organization.push( job.__organization__ );
+                        auxBuild_organization.push( job.__organization__.id );
+                    };
+                }
                 // Category
-                tables.rel_job_and_category.push({ jobId: job.id, categoryId: job.__category__.id });
-                if( !auxBuild_category.includes(job.__category__.id) ) {
-                    tables.category.push( job.__category__ );
-                    auxBuild_category.push( job.__category__.id );
-                };
+                if(props.filters.includes('category')){
+                    tables.rel_job_and_category.push({ jobId: job.id, categoryId: job.__category__.id });
+                    if( !auxBuild_category.includes(job.__category__.id) ) {
+                        tables.category.push( job.__category__ );
+                        auxBuild_category.push( job.__category__.id );
+                    };
+                }
                 // Role
-                tables.rel_job_and_role.push({ jobId: job.id, roleId: job.__role__.id });
-                if( !auxBuild_role.includes(job.__role__.id) ) {
-                    tables.role.push( job.__role__ );
-                    auxBuild_role.push( job.__role__.id );
-                };
+                if(props.filters.includes('role')){
+                    tables.rel_job_and_role.push({ jobId: job.id, roleId: job.__role__.id });
+                    if( !auxBuild_role.includes(job.__role__.id) ) {
+                        tables.role.push( job.__role__ );
+                        auxBuild_role.push( job.__role__.id );
+                    };
+                }
                 // SubCategories
-                for( let subCategory of job.__subCategories__ ){
-                    tables.rel_job_and_subCategory.push({ jobId: job.id, subCategoryId: subCategory.id });
-                    if( !auxBuild_subCategory.includes(subCategory.id) ){
-                        tables.subCategory.push(subCategory);
-                        auxBuild_subCategory.push(subCategory.id);
+                if(props.filters.includes('subCategory')){
+                    for( let subCategory of job.__subCategories__ ){
+                        tables.rel_job_and_subCategory.push({ jobId: job.id, subCategoryId: subCategory.id });
+                        if( !auxBuild_subCategory.includes(subCategory.id) ){
+                            tables.subCategory.push(subCategory);
+                            auxBuild_subCategory.push(subCategory.id);
+                        }
                     }
                 }
                 // Benefits
-                for( let benefit of job.__benefits__ ){
-                    tables.rel_job_and_benefit.push({ jobId: job.id, benefitId: benefit.id });
-                    if( !auxBuild_benefit.includes(benefit.id) ){
-                        tables.benefit.push(benefit);
-                        auxBuild_benefit.push(benefit.id);
+                if(props.filters.includes('benefit')){
+                    for( let benefit of job.__benefits__ ){
+                        tables.rel_job_and_benefit.push({ jobId: job.id, benefitId: benefit.id });
+                        if( !auxBuild_benefit.includes(benefit.id) ){
+                            tables.benefit.push(benefit);
+                            auxBuild_benefit.push(benefit.id);
+                        }
                     }
                 }
                 // Tipos
-                for( let type of job.__types__ ){
-                    tables.rel_job_and_type.push({ jobId: job.id, Id: type.id });
-                    if( !auxBuild_type.includes(type.id) ){
-                        tables.type.push(type);
-                        auxBuild_type.push(type.id);
+                if(props.filters.includes('type')){
+                    for( let type of job.__types__ ){
+                        tables.rel_job_and_type.push({ jobId: job.id, Id: type.id });
+                        if( !auxBuild_type.includes(type.id) ){
+                            tables.type.push(type);
+                            auxBuild_type.push(type.id);
+                        }
                     }
                 }
             
@@ -111,22 +124,21 @@ export default function JobsManager(props){
             tables.job.push(tempJob);
         }
             
-        // Filters
-        const [filters, setFilters] = useState({
-            state: [],
-            city: [],
-            organization: [],
-            category: [],
-            subCategory: [],
-            role: [],
-            benefit: [],
-            type: []
-        });
+    // Filters
+    const [filters, setFilters] = useState({
+        state: [],
+        city: [],
+        organization: [],
+        category: [],
+        subCategory: [],
+        role: [],
+        benefit: [],
+        type: []
+    });
 
-    const handleFilterChange = (item, values) => {
+    const handleFilterChange = (item, itens) => {
         var tempFilters = {...filters};
-        tempFilters[item] = values;
-        console.log("Filter Change ", item, values)
+        tempFilters[item] = itens;
         setFilters(tempFilters);
     }
 
@@ -135,6 +147,7 @@ export default function JobsManager(props){
         for(let key of Object.keys(tempFilters)){
             tempFilters[key] = [];
         }
+        
         setFilters(tempFilters);
     }
 
@@ -144,143 +157,265 @@ export default function JobsManager(props){
             const fromTo = {
                 "state": "job.state",
                 "city": "job.city"
-            }
+            };
     
-            if( !(filters[item].length === 0) ){
+            if( props.filters.includes(item) && !(filters[item].length === 0 ) ){
                 let list = filters[item].map( (i) => {
-                    return `'${i}'`
+                    return `'${i['id']}'`
                 });
-                return `AND ${ Object.keys(fromTo).includes(item) ? fromTo[item] : `${ item }`.id } IN (${ list.toString() })`
+                const filterCondition = `AND ${ Object.keys(fromTo).includes(item) ? fromTo[item] : `${ item }.id` } IN (${ list.toString() })`;
+                return filterCondition
+
             } else {
                 return ""
             }
         }
 
-        const query =`
-            with jobs as(
-                SELECT
-                    job.id,
-                    job.code,
-                    job.title,
-                    role.name as role,
-                    job.slug,
-                    job.city,
-                    job.state,
-                    organization.name as organizationName,
-                    organization.logoUrl
+        function getQuery(){
+            if( props.filters.includes('organization') ){
+                const query = `
+                    with jobs as(
+                        SELECT
+                            job.id,
+                            job.code,
+                            job.title,
+                            role.name as role,
+                            job.slug,
+                            job.city,
+                            job.state,
+                            job.createdAt,
+                            organization.name as organizationName,
+                            organization.logoUrl
+        
+                        FROM ? as rel_job_and_organization
+                        
+                        LEFT JOIN ? as job
+                            ON rel_job_and_organization.jobId = job.id
+        
+                        LEFT JOIN ? as organization
+                            ON rel_job_and_organization.organizationId = organization.id
+        
+                        LEFT JOIN ? as rel_job_and_category
+                            ON rel_job_and_category.jobId = job.id
+                        LEFT JOIN ? as category
+                            ON rel_job_and_category.categoryId = category.id
+        
+                        LEFT JOIN ? as rel_job_and_role
+                            ON rel_job_and_role.jobId = job.id
+                        LEFT JOIN ? as role
+                            ON rel_job_and_role.roleId = role.id
+        
+                        LEFT JOIN ? as rel_job_and_type
+                            ON rel_job_and_type.jobId = job.id
+                        LEFT JOIN ? as type
+                            ON rel_job_and_type.typeId = type.id
+        
+                        LEFT JOIN ? as rel_job_and_benefit
+                            ON rel_job_and_benefit.jobId = job.id
+                        LEFT JOIN ? as benefit
+                            ON rel_job_and_benefit.benefitId = benefit.id
+                        WHERE
+                                1 = 1
+                            ${ buildSearchFilter('state') }
+                            ${ buildSearchFilter('city') }
+                            ${ buildSearchFilter('organization') }
+                            ${ buildSearchFilter('benefit') }
+                            ${ buildSearchFilter('category') }
+                            ${ buildSearchFilter('subCategory') }
+                            ${ buildSearchFilter('role') }
+                            ${ buildSearchFilter('type') }
+                    )
+        
+                    SELECT
+                        id,
+                        code,
+                        title,
+                        role,
+                        slug,
+                        city,
+                        state,
+                        createdAt,
+                        organizationName,
+                        logoUrl
+                    FROM jobs
+                    GROUP BY
+                        id,
+                        code,
+                        title,
+                        role,
+                        slug,
+                        city,
+                        state,
+                        createdAt,
+                        organizationName,
+                        logoUrl
+                    ORDER BY createdAt desc
+                `;
+                const data = [
+                    tables.rel_job_and_organization ,
+                    tables.job,
+                    tables.organization,
+                    tables.rel_job_and_category,
+                    tables.category,
+                    tables.rel_job_and_role,
+                    tables.role,
+                    tables.rel_job_and_type,
+                    tables.type,
+                    tables.rel_job_and_benefit,
+                    tables.benefit
+                ];
 
-                FROM ? as rel_job_and_organization
-                
-                LEFT JOIN ? as job
-                    ON rel_job_and_organization.jobId = job.id
+                return[query, data]
+            } else {
+                const query = `
+                    with jobs as(
+                        SELECT
+                            job.id,
+                            job.code,
+                            job.title,
+                            role.name as role,
+                            job.slug,
+                            job.city,
+                            job.state,
+                            job.createdAt
 
-                LEFT JOIN ? as organization
-                    ON rel_job_and_organization.organizationId = organization.id
+                        FROM ? as job
+        
+                        LEFT JOIN ? as rel_job_and_category
+                            ON rel_job_and_category.jobId = job.id
+                        LEFT JOIN ? as category
+                            ON rel_job_and_category.categoryId = category.id
+        
+                        LEFT JOIN ? as rel_job_and_role
+                            ON rel_job_and_role.jobId = job.id
+                        LEFT JOIN ? as role
+                            ON rel_job_and_role.roleId = role.id
+        
+                        LEFT JOIN ? as rel_job_and_type
+                            ON rel_job_and_type.jobId = job.id
+                        LEFT JOIN ? as type
+                            ON rel_job_and_type.typeId = type.id
+        
+                        LEFT JOIN ? as rel_job_and_benefit
+                            ON rel_job_and_benefit.jobId = job.id
+                        LEFT JOIN ? as benefit
+                            ON rel_job_and_benefit.benefitId = benefit.id
+                        WHERE
+                                1 = 1
+                            ${ buildSearchFilter('state') }
+                            ${ buildSearchFilter('city') }
+                            ${ buildSearchFilter('benefit') }
+                            ${ buildSearchFilter('category') }
+                            ${ buildSearchFilter('subCategory') }
+                            ${ buildSearchFilter('role') }
+                            ${ buildSearchFilter('type') }
+                    )
+        
+                    SELECT
+                        id,
+                        code,
+                        title,
+                        role,
+                        slug,
+                        city,
+                        state,
+                        createdAt
+                    FROM jobs
+                    GROUP BY
+                        id,
+                        code,
+                        title,
+                        role,
+                        slug,
+                        city,
+                        state,
+                        createdAt
+                    ORDER BY createdAt desc
+                `;
+                const data = [
+                    tables.job,
+                    tables.rel_job_and_category,
+                    tables.category,
+                    tables.rel_job_and_role,
+                    tables.role,
+                    tables.rel_job_and_type,
+                    tables.type,
+                    tables.rel_job_and_benefit,
+                    tables.benefit
+                ];
+                return [query, data]
+            }
+        }
 
-                LEFT JOIN ? as rel_job_and_category
-                    ON rel_job_and_category.jobId = job.id
-                LEFT JOIN ? as category
-                    ON rel_job_and_category.categoryId = category.id
-
-                LEFT JOIN ? as rel_job_and_role
-                    ON rel_job_and_role.jobId = job.id
-                LEFT JOIN ? as role
-                    ON rel_job_and_role.roleId = role.id
-
-                LEFT JOIN ? as rel_job_and_type
-                    ON rel_job_and_type.jobId = job.id
-                LEFT JOIN ? as type
-                    ON rel_job_and_type.typeId = type.id
-
-                LEFT JOIN ? as rel_job_and_benefit
-                    ON rel_job_and_benefit.jobId = job.id
-                LEFT JOIN ? as benefit
-                    ON rel_job_and_benefit.benefitId = benefit.id
-                WHERE
-                        job.id NOT NULL
-                    ${ buildSearchFilter('state') }
-                    ${ buildSearchFilter('city') }
-
-            )
-
-            SELECT
-                id,
-                code,
-                title,
-                role,
-                slug,
-                city,
-                state,
-                organizationName,
-                logoUrl
-            FROM jobs
-            GROUP BY
-                id,
-                code,
-                title,
-                role,
-                slug,
-                city,
-                state,
-                organizationName,
-                logoUrl
-        `;
-
-        const data = alasql(
-            query,
-            [ 
-            tables.rel_job_and_organization ,
-            tables.job,
-            tables.organization,
-            tables.rel_job_and_category,
-            tables.category,
-            tables.rel_job_and_role,
-            tables.role,
-            tables.rel_job_and_type,
-            tables.type,
-            tables.rel_job_and_benefit,
-            tables.benefit
-        ]);
+        let serchData = getQuery();
+        const data = alasql(serchData[0],serchData[1]);
         return data
     }
 
     const getListOfJobs = () => {
         // Build the List of Jobs that gonna be presented at display
+        if( props.jobs.length === 0 ){
+            return(
+                <div className={ styles.JobsNotFound }>
+                    <p>Nenhuma vaga foi encontrada.</p>
+                    <Link href='/'>
+                        <a>Fazer Nova Pesquisa</a>
+                    </Link>
+                </div>
+            )
+        }
+        
         const searchResults = search();
+        if ( searchResults.length === 0 ){
+            return(
+                <div className={ styles.noFilterMatches }>
+                    <p>Nenhuma vaga encontrada para a combinação de filtros utilizada. Tente outra combinação.</p>
+                </div>
+            )
+        } else {
+            var jobs = [];
+            var jobKey = 0;
+            const replacers = {
+                "logoUrl":  props.replacers["logoUrl"] ? props.replacers["logoUrl"] : undefined,
+                "organizationName":  props.replacers["organizationName"] ? props.replacers["organizationName"] : undefined
+            };
 
-        const jobs = searchResults.map( (job, key) => {
-            return <JobHorizontal
-                job={ job }
-                className={ styles.JobHorizontal }
-                key={ key }
-            />
-        });
+            for(let job of searchResults){                
+                jobs.push(
+                    <JobHorizontal
+                        job={ job }
+                        className={ styles.JobHorizontal }
+                        key={ jobKey }
+                        replacers={ replacers }
+                    />
+                );
 
-        return(
-            <div className={ styles.ListOfJobs }>
-                <p>{`${ searchResults.length } Vagas Encontradas`}</p>
-                
-                { jobs }
-            </div>
-        )
+                jobKey = jobKey + 1;
+            }
+
+            return(
+                <div className={ styles.ListOfJobs }>
+                    <p>{`${ searchResults.length } Vagas Encontradas`}</p>
+                    { jobs }
+                </div>
+            )
+        }
     }
-
-    const getFilter = () => {
     
+    const getFilter = () => {
+        var filterData = {};
+        for(let item of props.filters){
+            filterData[item] = {itens: tables[item], selected: filters[item] }
+        }
+
         return (
             <JobsFilter
                 className={`${ styles.JobsFilter } ${ showFilterButton ? styles.ShowFilter : "" }`}
+                filters={ props.filters }
                 handleClose={ handleFilterShowState }
                 changesHandler={ handleFilterChange }
                 clearFilter={ handleFilterCleaning }
-                state={{ itens: tables.state, selected: filters.state }}
-                city={{ itens: tables.city, selected: filters.city }}
-                organization={{ itens: tables.organization, selected: filters.organization }}
-                category={{ itens: tables.category, selected: filters.category }}
-                subCategory={{ itens: tables.subCategory, selected: filters.subCategory }}
-                role={{ itens: tables.role, selected: filters.role }}
-                benefit={{ itens: tables.benefit, selected: filters.benefit }}
-                type={{ itens: tables.type, selected: filters.type }}
+                data={ filterData }
             />
         )
     }
@@ -289,6 +424,7 @@ export default function JobsManager(props){
     const handleFilterShowState = () => {
         setShowFilterButton( !showFilterButton );
     }
+
     return (
         <div className={ styles.JobsManager }>
             <div className={ styles.Menu }>
@@ -296,20 +432,10 @@ export default function JobsManager(props){
                     <Image
                         src="/imgs/filter.png"
                         alt="Filtrar Vagas"
-                        width="35"
-                        height="35"
+                        width="25"
+                        height="25"
                     />
-                    <span>Filtar</span>
-                </div>
-
-                <div  className={ styles.queryFilterButton }>
-                    <span>Pesquisar</span>
-                    <Image
-                        src="/imgs/search.png"
-                        alt="Pesquisar"
-                        width="35"
-                        height="35"
-                    />
+                    <span>Filtar Vagas</span>
                 </div>
             </div>
             <div className={ styles.ContentBox }>

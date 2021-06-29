@@ -2,7 +2,7 @@
     display: flex;
     flex: row;
     flex-wrap: nowrap;
-    overflow-x: scroll;
+    overflow-x: auto;
 
     .RelatedJob{
         margin: 10px;

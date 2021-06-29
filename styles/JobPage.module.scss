@@ -57,11 +57,18 @@ $basic-color-hover: #0288d1;
                 margin: 0px;
                 padding: 0px;
             }
-            // Organization
-            p:nth-child(2){
+
+            a{
                 font-size: 22px;
                 margin: 5px 0px;
+                color: $basic-color;
+                cursor: pointer;
+
+                &:hover{
+                    color: $basic-color-hover;
+                }
             }
+
             // Region
             p:nth-child(3){
                 font-size: 16px;
