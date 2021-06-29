@@ -241,7 +241,10 @@ function Job({ job, relatedJobs }){
 }
 
 export async function getStaticPaths(){
-    const jobsData =  await JobsAPI.getSlugs();
+    const resp =  await fetch("https://site-vagas.herokuapp.com/jobs/slugs", {
+        headers: {"Bearer": "5a6c8f7d-20cf-4ba1-a57a-f324ae0315b9"}
+    });
+    const jobsData = await resp.json();
     const paths = jobsData.map( (job) => ({
         params: { code: job.code, slug: job.slug }
     }));
