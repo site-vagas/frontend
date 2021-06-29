@@ -51,8 +51,8 @@ function Job({ job, relatedJobs }){
         }
 
         function buildMetaArticleTags(){
-            return job.__subCategories__.map( (sc) =>{
-                return <meta property="og:article:tag" content={ sc.name } />
+            return job.__subCategories__.map( (sc, key) =>{
+                return <meta key={ key } property="og:article:tag" content={ sc.name } />
             })
         }
 

@@ -33,7 +33,6 @@ export default function JobForm(props) {
                         })
                     };
                 });
-                console.log("Options", aux_allRegions)
                 setAllRegions( aux_allRegions );
             });
         })

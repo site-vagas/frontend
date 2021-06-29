@@ -9,7 +9,7 @@ $basic-color-hover: #0288d1;
     .closeButton{
         display: flex;
         flex-direction: row-reverse;
-        justify-content: end;
+        justify-content: flex-start;
         margin: 0px;
         padding: 0px;
 
