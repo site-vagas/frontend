@@ -1,0 +1,220 @@
+$basic-color: #03a9f4;
+$basic-color-hover: #0288d1;
+
+.Header{
+    background-color: $basic-color;
+    width: 100%;
+    margin: 0;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 30px;
+
+    p{
+        margin: 0;
+        padding: 0px 5px;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    span{
+        font-weight: 400;
+        font-size: 14px;
+    }
+
+    .queryFilterButton{
+        display: none;
+    }
+
+    .FilterWindow{
+        width: 50%;
+
+        .closeButton{
+            display: none;
+        }
+
+        div[element="JobForm"]{
+
+            p[element="title"]{
+                display: none;
+            }
+
+            form {
+                width: 100%;
+                display: grid;
+                grid-template-columns: 40% 40% 20%;
+
+                input[type="text"]{
+                    border: none;
+                    padding: 5px 10px;
+                    margin-right: 10px;
+                    outline: none;
+
+                    &:focus{
+                        border-bottom: 2px solid #000;
+                    }
+                }
+
+                input[type="submit"]{
+                    background-color: transparent;
+                    border: 1px solid #fff;
+                    border-radius: 3px;
+                    padding: 5px 10px;
+                    color: #fff;
+                    font-size: 16px;
+                    cursor: pointer;
+
+                    &:hover{
+                        background-color: $basic-color-hover;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 900px){
+    .Header{
+        padding-right: 10px;
+
+        .queryFilterButton{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #fff;
+            padding: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+
+            span{
+                margin-right: 10px;
+                font-size: 16px;
+                color: #fff;
+            }
+
+            &:hover{
+                background-color: $basic-color-hover;
+            }
+        }
+
+        .bluredContent_layer{
+            min-height: 100vh;
+            max-height: 100vh;
+            min-width: 100vw;
+            max-width: 100vw;
+            
+            position: fixed;
+            top: 0;
+            left: 0;
+
+            z-index: 10998;
+            
+            justify-content: center;
+            
+            background-color: #dcdcdcbf;
+
+            -webkit-filter: blur(5px);
+            -moz-filter: blur(5px);
+            -o-filter: blur(5px);
+            -ms-filter: blur(5px);
+            filter: blur(5px);
+    
+            div {
+                max-width: 90vw;
+            }
+        }
+
+        .FilterWindow{
+        
+            &.hideFilter{
+                display: none;
+            }
+
+            &.showFilter{
+                position: fixed;
+                top: 0;
+                left: 0;
+
+                z-index: 10999;
+                
+                min-width: 100vw;
+                max-width: 100vw;
+                min-height: 100vh;
+                max-height: 100vh;
+                
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                
+                background-color: #dcdcdcbf;
+
+                .closeButton{
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row-reverse;
+                    justify-content: end;
+                    margin: 0px;
+                    padding: 0px;
+                    
+                    p{
+                        color: #000;
+                        text-align: right;
+                        margin: 20px 20px 0px 0px;
+                        font-size: 24px;
+                        font-weight: 400;
+                        cursor: pointer;
+                        user-select: none;
+                    }
+                }
+
+                div[element="JobForm"]{
+                    display: flex;
+                    flex-direction: column;
+                    width: 80%;
+                    margin: auto;
+                    background-color: #fff;
+                    padding: 20px 10px;
+                    border: 1px solid #e3e3e3;
+                    border-radius: 5px;
+
+                    p[element="title"]{
+                        display: block;
+                        color: #000;
+                        text-align: center;
+                        margin-bottom: 10px;
+                    }
+
+                    form{
+                        display: flex;
+                        flex-direction: column;
+
+                        input{
+                            width: 100%;
+                            padding: 10px 5px;
+                            border: none;
+                            margin-bottom: 20px;
+                            font-size: 16px;
+                            
+                            &[type="text"]{
+                                background-color: #e3e3e3;;
+                            }
+
+                            &[type="submit"]{
+                                background-color: $basic-color;
+                                color: #fff;
+
+                                &:hover{
+                                    background-color: $basic-color-hover;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

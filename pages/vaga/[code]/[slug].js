@@ -3,6 +3,10 @@ import Head from 'next/head';
 import { useRef, useState, useEffect } from 'react';
 import styles from './../../../styles/JobPage.module.scss';
 import RelatedJob from '../../../components/pages/job/RelatedJobs';
+import PageHeader from '../../../components/general/PageHeader';
+import Link from 'next/link';
+import { Jobs as JobsAPI } from './../../../api';
+import { JobsTools } from '../../../tools';
 
 function Job({ job, relatedJobs }){
     const router = useRouter();
@@ -66,6 +70,10 @@ function Job({ job, relatedJobs }){
                 <meta property="og:article:author" content={ job.__organization__.name } />
                 <meta property="og:article:section" content={ job.__category__.name } />
                 { buildMetaArticleTags() }
+
+                <script type="application/ld+json">
+                    { JSON.stringify( JobsTools.buildStrucData(job) ) }
+                </script>
             </Head>
         )
     }
@@ -88,6 +96,8 @@ function Job({ job, relatedJobs }){
 
     if ( router.isFallback ) { return <>Carregando...</> }
     return(
+        <>
+        <PageHeader />
         <div className={styles.JobPage}>
             
             { getPageHead() }
@@ -97,7 +107,6 @@ function Job({ job, relatedJobs }){
                     <p onClick={ handleCloseButton_jobWindow }>X</p>
                 </div>
 
-                {/* Header */}
                 <div>
                     <div className={styles.jobTitle}>
                         <h1>{ job.title }</h1>
@@ -115,7 +124,9 @@ function Job({ job, relatedJobs }){
                         <div>
                             <div>
                                 <p>{job.__role__.name}</p>
-                                <p>{job.__organization__.name}</p>
+                                <Link href={`/empresa/${ job.__organization__.code }/${ job.__organization__.slug }`}>
+                                    <a>{job.__organization__.name}</a>
+                                </Link>
                                 <p>
                                     <span>{job.city}</span>
                                     <span>{job.state}</span>
@@ -225,17 +236,15 @@ function Job({ job, relatedJobs }){
                 </div>
             </div>
         </div>
+        </>
     )
 }
 
 export async function getStaticPaths(){
-    const resp = await fetch(`https://site-vagas.herokuapp.com/jobs/slugs`);
-    const jobs =  await resp.json();
-
-    const paths = jobs.map( (job) => ({
+    const jobsData =  await JobsAPI.getSlugs();
+    const paths = jobsData.map( (job) => ({
         params: { code: job.code, slug: job.slug }
     }));
-
     return { paths, fallback: true }
 }
 
@@ -244,20 +253,23 @@ export async function getStaticProps({ params }){
     var job = undefined;
     var relatedJobs = undefined;
     try {
-        const resp = await fetch(url);
+        var headers = new Headers();
+        headers.append('Bearer', process.env.API_BEARER_TOKEN);
+        const resp = await fetch(url, {method: 'GET', headers:headers});
         job = await resp.json();
     } catch( err) {
         job = undefined;
     }
 
-    if ( !job ){
+    if ( job ){
+        relatedJobs = await fetch(`https://site-vagas.herokuapp.com/jobs/related/${job.id}/${job.__category__.id}`, {
+            headers: {'Bearer': process.env.API_BEARER_TOKEN}
+        });
+        relatedJobs = await relatedJobs.json();
+    } else {
         return {
             notFound: true
         }
-    } else {
-
-        relatedJobs = await fetch(`https://site-vagas.herokuapp.com/jobs/related/${job.id}/${job.__category__.id}`);
-        relatedJobs = await relatedJobs.json();
     }
 
     return {

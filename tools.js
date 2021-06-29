@@ -38,3 +38,123 @@ exports.getCookie = function(cname) {
     }
     return "";
 }
+
+exports.JobsTools = {
+  buildStrucData: function(job){
+    const jobDescription = `
+      <p>Descrição</p>
+      <br>
+      ${ job.description }
+
+      <br>
+      <br>
+
+      <p>Principais Atividades</p>
+      <br>
+      ${ job.mainActivities }
+      <br>
+      <br>
+      <p>Para saber mais sobre esta vaga e se candidatar, acesse o nosso site clicando no botão "Acesse em Tickun".</p>
+    `;
+
+    var employmentType = [];
+    var jobLocationType = "";
+    for(let type of job.__types__){
+      switch( type.name ){
+        case 'Período Integral':
+          employmentType.push("FULL_TIME");
+          break;
+        case 'Meio Período':
+          employmentType.push("PART_TIME");
+          break;
+        case 'Pessoa Jurídica':
+          employmentType.push("CONTRACTOR");
+          break;
+        case 'Temporário':
+          employmentType.push("TEMPORARY");
+          break;
+        case 'Estágio':
+          employmentType.push("INTERN");
+          break;
+        case 'Meio Período':
+          employmentType.push("PART_TIME");
+          break;
+        case 'Home Office':
+          jobLocationType = 'TELECOMMUTE';
+          break;
+        default:
+          null;
+      }
+    }
+
+    var structuredData = {
+      "@context" : "https://schema.org/",
+      "@type" : "JobPosting",
+      "title" : job.title,
+      "description" : jobDescription,
+      "datePosted" : job.createdAt,
+      "validThrough" : job.expirationDate,
+
+      "identifier": {
+        "@type": "PropertyValue",
+        "name":  job.__organization__.name,
+        "value":  job.__organization__.code
+      },
+      "hiringOrganization" : {
+        "@type" : "Organization",
+        "name" : job.__organization__.name,
+        "sameAs" : job.__organization__.site || "",
+        "logo" : job.__organization__.logoUrl || ""
+      },
+      "jobLocation": {
+        "@type": "Place",
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "BR",
+          "addressRegion": job.state,
+          "addressLocality": job.city
+        }
+      },
+      "employmentType": employmentType,
+      "baseSalary":{
+        "@type": "MonetaryAmount",
+        "currency": "BRL",
+        "value":{
+          "@type": "QuantitativeValue",
+          "value": (job.salary > 0 ? job.salary : ""),
+          "unitText": "MONTH"
+        }
+      }
+    };
+
+    if( jobLocationType && jobLocationType.replace(" ","") !== "" ) {
+      structuredData["jobLocationType"] = jobLocationType;
+      structuredData["applicantLocationRequirements"] = {
+        "@type": "Country",
+        "name": "Brasil"
+      };
+    }
+
+    return structuredData
+  },
+
+  getHowLong(initialTime, endTime=null){
+    if ( !endTime ) { endTime = new Date() };
+    var passedHours = Math.trunc(((endTime - initialTime)/( 1000 * 60 * 60)));
+    var passedDays = Math.trunc(passedHours/24);
+    var howLog;
+    if ( passedHours < 24){
+      howLog = `Há ${ passedHours } ${ passedHours === 1 ? "hora" : "horas"}`;
+    }
+    else if ( passedDays < 7 ){
+      howLog = `Há ${ passedDays } ${ passedDays === 1 ? "dia" : "dias"}`;
+    }
+    else if ( passedDays < 30 ){
+      howLog =  `Há ${ Math.trunc(passedDays/7) } ${ Math.trunc(passedDays/7) === 1 ? "semana" : "semanas" }`
+    }
+    else{
+      howLog =  `Há ${ Math.trunc(passedDays/30) } ${ Math.trunc(passedDays/30) === 1 ? "Mês" : "Meses" }`
+    }
+    return {time: passedDays, text: howLog}
+  }
+}

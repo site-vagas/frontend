@@ -1,18 +1,20 @@
 import Link from 'next/link';
-import Jobs from '../../pages/vagas/[search_slug]';
-import { useRouter } from 'next/router';
-
+import { JobsTools } from '../../tools';
 export default function JobHorizontal(props){
 
     const getJobUrl = () => {
         return `/vaga/${ props.job.code }/${ props.job.slug }`
     }
 
+    const howLong = JobsTools.getHowLong(new Date(props.job.createdAt));
     return(
         <div className={ props.className }>
             <div>
                 <div>
-                    <img src={ props.job.logoUrl } alt={ props.job.organizationName }/>
+                    <img
+                        src={ props.replacers['logoUrl'] ? props.replacers['logoUrl'] : props.job.logoUrl }
+                        alt={ props.replacers['organizationName'] ? props.replacers['organizationName'] : props.job.organizationName }
+                    />
                 </div>
 
                 <div>
@@ -20,11 +22,13 @@ export default function JobHorizontal(props){
                         <a>{ props.job.title }</a>
                     </Link>
                     <p>{ props.job.role }</p>
-                    <p>{ props.job.organizationName }</p>
+                    <p>
+                        { props.replacers['organizationName'] ? props.replacers['organizationName'] : props.job.organizationName }
+                    </p>
                     <p>{`${ props.job.city } - ${ props.job.state }`}</p>
                 </div>
             </div>
-            <p>Há 2 semanas</p>
+            <p element="howlong" howlong={howLong["text"]}>{ howLong["text"] }</p>
         </div>
     )
 }

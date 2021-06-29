@@ -1,139 +1,172 @@
-import React, { Component } from 'react';
+import { useEffect, useState } from "react";
 import styles from './MultiSelector.module.scss';
 
-export default class MultipleSelector extends Component {
-    constructor(props){
-        super(props)
-        this.propagationFunction = this.props.propagationFunction;
+export default function MultiSelector(props){
 
-        this.state = {
-            name: this.props.name,
-            searchQuery: "",
-            allItens: this.props.itens,
-            filteredItens: this.props.itens,
-            selectedItens: this.props.selectedItens || [],
-            
-        };
-
-        this.getItensList = this.getItensList.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
-        this.handleItemSelection = this.handleItemSelection.bind(this);
-        this.selectAll = this.selectAll.bind(this);
-        this.unselectAll = this.unselectAll.bind(this);
-    }
-
-    componentDidUpdate(prevProps){
-        if( this.props !== prevProps ){
-            this.setState({
-                allItens: this.props.itens,
-                filteredItens: this.props.itens,
-                selectedItens: this.props.selectedItens
-            })
+    const getItemByKey = (itemKey) => {
+        for(let item of props.itens){
+            if(item[props.itemKey] === itemKey){
+                return item
+            }
         }
     }
+
+    const slugfy = (str) => {
+        str = str.replace(/^\s+|\s+$/g, ''); // trim
+        str = str.toLowerCase();
+      
+        // remove accents, swap ñ for n, etc
+        var from = "ãàáäâèéëêìíïîõòóöôùúüûñç·/_,:;";
+        var to   = "aaaaaeeeeiiiiõoooouuuunc------";
+        for (var i=0, l=from.length ; i<l ; i++) {
+            str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+        }
     
-    handleItemSelection(event){
-        var selectedItens = this.state.selectedItens;
-        const eventValue = event.target.value;
-        
-        if ( selectedItens.includes(eventValue) ){
-            selectedItens = selectedItens.filter(item => { return  item !== eventValue })
-        } else {
-            selectedItens.push(eventValue)
-        }
-        this.propagationFunction(selectedItens);
-        this.setState({selectedItens: selectedItens});
+        str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+            .replace(/\s+/g, '-') // collapse whitespace and replace by -
+            .replace(/-+/g, '-'); // collapse dashes
+    
+        return str
     }
 
-    getItensList(){
-        const selectedItens = this.state.selectedItens;
-        const handleItemSelection = this.handleItemSelection;
-        const listName = this.state.name;
+    const [allItens, setAllItens] = useState( props.itens )
+    const [searchQuery, setSearchQuery] = useState("")
+    const [filteredItens, setFilteredItens] = useState( props.itens )
+    const [selectedItens, setSelectedItens] = useState( props.selectedItens )
 
-        function ItemList (props){
-            const itemSelected = selectedItens.includes(props.value);
-            return (
-                <li>
+    const handleSearch = (event) => {
+        setSearchQuery(event.target.value);
+        const searchQuery_slug = slugfy(event.target.value);
+        var new_filteredItens = [];
+        if( event.target.value.replace(" ","") === "" ){
+            setFilteredItens([...allItens]);
+        } else {
+            for( let item of allItens ){
+                if( slugfy(item[props.itemValue]).includes(searchQuery_slug)){
+                    new_filteredItens.push(item);
+                    setFilteredItens( new_filteredItens )
+                }
+            }
+        }
+    }
+
+    const setItensSelection = (itens) => {
+        setSelectedItens([...itens]);
+        props.propagationFunction([...itens]);
+    }
+
+    const handleItemSelection = (event) => {
+        // Update the list of Selected Itens
+        const itemKey = event.target.value;
+        const selectedItens_Ids = selectedItens.map( i => ( i[props.itemKey] ));
+        var new_selectedItens = [];
+
+        if( selectedItens_Ids.includes(itemKey) ){
+            for( let item of selectedItens ){
+                if( !(item[props.itemKey] === itemKey) ){
+                    new_selectedItens.push(item);
+                }
+            }
+        } else {
+            new_selectedItens = [...selectedItens];
+            new_selectedItens.push( getItemByKey(itemKey) );
+        }
+
+        setItensSelection(new_selectedItens);
+    }
+
+    const handleSelectAll = () => {
+        // Select All avaiable itens
+        const filteredItens_Ids = filteredItens.map( i => (i[props.itemKey]));
+        const selectedItens_Ids = selectedItens.map( i => ( i[props.itemKey] ));
+        var new_selectedItens = [...selectedItens];
+        for( let item of filteredItens_Ids ){
+            if( !(selectedItens_Ids.includes(item)) ){
+                new_selectedItens.push( getItemByKey(item) );
+            }
+        }
+        setItensSelection(new_selectedItens);
+    }
+
+    const handleUnselectAll = () => {
+        // Remove Selection of All Itens
+        const filteredItens_id = filteredItens.map( item => (item[props.itemKey]));
+        var new_selectedItens = [];
+        for(let item of selectedItens){
+            if( !filteredItens_id.includes(item[props.itemKey]) ){
+                new_selectedItens.push(item);
+            }
+        }
+        setItensSelection( new_selectedItens );
+    }
+
+    const getItens = () => {
+        const itens = filteredItens.map( (item, key) => {
+            let itemKey = item[props.itemKey];
+            let itemValue = item[props.itemValue];
+            return(
+                <li key={ key }>
                     <input
                         type="checkbox"
-                        value={props.value}
-                        id={`${listName}_item_${props.value}`}
-                        checked={ itemSelected }
+                        id={ `${props.name}_${itemKey}` }
+                        value={ itemKey }
+                        checked={ selectedItens.map(i => (i[props.itemKey])).includes(itemKey) }
                         onChange={ handleItemSelection }
                     />
-                    <label htmlFor={`${listName}_item_${props.value}`}>{props.name}</label>
+                    <label
+                        htmlFor={ `${props.name}_${itemKey}` }
+                    >
+                        { itemValue }
+                    </label>
                 </li>
             )
-        }
-
-        var itens = <></> 
-        if ( this.state.filteredItens !== null &&  this.state.filteredItens !== undefined ){
-            itens = this.state.filteredItens.map( (item, key) =>{
-                return <ItemList key={ key } name={ item[this.props.itemName] } value={ item[this.props.itemKey] }/>
-            })
-        }
+        });
 
         return itens
     }
 
-    handleSearch(event){
-        const query = event.target.value;
-        if( query !== "" && this.state.allItens !== null & this.state.allItens !== undefined) {
-            function filter(Item){
-                return Item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
-            }
-    
-            const filteredItens = this.state.allItens.filter( filter );
-            this.setState({ filteredItens: filteredItens });
-        } else {
-            this.setState({ filteredItens: this.state.allItens });
+    useEffect(() => {
+        const updateItenOnPropsChange = () => {
+            setAllItens(props.itens);
+            setSelectedItens(props.selectedItens);
         }
-    }
+        updateItenOnPropsChange();
+    })
 
-    selectAll(){
-        const allItens = this.state.allItens.map( (item) => {
-            return item[this.props.itemKey]
-        })
-
-        this.propagationFunction(allItens);
-        this.setState({
-            ...this.state,
-            selectedItens: allItens
-        });
-    }
-
-    unselectAll(){
-        this.propagationFunction([]);
-        this.setState({
-            ...this.state,
-            selectedItens: []
-        });
-    }
-
-    render(){
-
-        return(
-            <div className={ styles.MultipleSelector }>
-                <div className={ styles.searchBar }>
-                    <input type="text" placeholder="Pesquise aqui" onChange={ this.handleSearch }/>
-                </div>
-
-                <div className={ styles.helpers }>
-                    <div>
-                        <span onClick={ this.selectAll }>Selecionar Todos</span>
-                    </div>
-                    <div>
-                        <span onClick={ this.unselectAll }>Desmarcar Tudo</span>
-                    </div>
-                </div>
-
-                <div className={ styles.itens }>
-                    <ul>
-                        { this.getItensList() }
-                    </ul>
-                </div>
-            
+    return(
+        <div className={ styles.MultiSelector }>
+            <div className={ styles.searchBar }>
+                <input
+                    type="text"
+                    placeholder="Pesquise aqui"
+                    value={ searchQuery }
+                    onChange={ handleSearch }
+                />
             </div>
-        )
-    }
+
+            <div className={ styles.helpers }>
+                <div>
+                    <span
+                        onClick={ handleSelectAll }
+                    >
+                        Selecionar Todos
+                    </span>
+                </div>
+
+                <div>
+                    <span
+                        onClick={ handleUnselectAll }
+                    >
+                        Desmarcar Todos
+                    </span>
+                </div>
+            </div>
+
+            <div className={ styles.itens }>
+                <ul>
+                    { getItens() }
+                </ul>
+            </div>
+        </div>
+    )
 }

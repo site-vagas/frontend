@@ -13,6 +13,18 @@ class MyDocument extends Document {
             <meta name="content-type" content="text/html;chartset=utf-8" />
             <meta name="theme-color" content="#0288d1"/>
             <link rel="icon" href="/favicon.ico" />
+
+            {/* <!-- Global site tag (gtag.js) - Google Analytics --> */}
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVMPG750BL"></script>
+            <script dangerouslySetInnerHTML={{
+              __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-EVMPG750BL', {
+                page_path: window.location.pathname
+              });`}}/>
         </Head>
         <body>
           <Main />

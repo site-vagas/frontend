@@ -1,21 +1,49 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import styles from './JobForm.module.scss';
-import { string_to_slug } from './../../../tools';
+import { string_to_slug } from '../../tools';
 
 export default function JobForm(props) {
     const router = useRouter();
 
     const [search, setSearch] = useState(undefined);
+    const [allRegions, setAllRegions] = useState([]);
     const [region, setRegion] = useState(undefined);
-    
+  
+    useEffect(() => {
+        fetch("https://site-vagas.herokuapp.com/jobs/regions", {
+            headers: {"Bearer": process.env.API_BEARER_TOKEN}
+        }).then( resp => {
+            resp.json().then( regions => {
+                
+                var aux_allRegions = [];
+                var aux_states = [];
+                
+                regions.map( ( regionOpt ) => {
+                    aux_allRegions.push({
+                        city: regionOpt.jobs_city,
+                        state: regionOpt.jobs_state,
+                        country: "Brasil"
+                    });
+            
+                    if ( !aux_states.includes( regionOpt.jobs_state ) ){
+                        aux_allRegions.push({
+                            city: "",
+                            state: regionOpt.jobs_state,
+                            country: "Brasil"
+                        })
+                    };
+                });
+                console.log("Options", aux_allRegions)
+                setAllRegions( aux_allRegions );
+            });
+        })
+    }, [])
+
     const handleSearchChange = event => {
-        console.log('Search: ', event.target.value);
         setSearch(event.target.value);
     }
 
     const handleRegionChange = event => {
-        console.log('Region Searched: ', event.target.value);
         setRegion(event.target.value);
     }
 
@@ -41,7 +69,7 @@ export default function JobForm(props) {
         }
 
         if ( region !== undefined && region !== null && region.replace(" ", "") !== "" ){
-            const data = props.allRegions.map( (regionOption, key) =>{
+            const data = allRegions.map( (regionOption, key) =>{
                 if( 
                         regionOption.city.toLocaleLowerCase().includes( region.toLocaleLowerCase() )
                     ||  regionOption.state.toLocaleLowerCase().includes( region.toLocaleLowerCase() )
@@ -51,16 +79,19 @@ export default function JobForm(props) {
                 }
             });
 
-            return data.slice(0, 5)
+            return data.slice(0, 10)
         } else {
             return <></>
         }
     }
 
+    const getTitle = () => {
+        return props.title ? <p element="title">{ props.title }</p> : <></>
+    }
+
     return(
-        <div className={ styles.JobForm }>
-            <h1>Tickun</h1>
-            <p>Encontre a vaga ideal com Você</p>
+        <div element="JobForm">
+            { getTitle() }
             <form onSubmit={handleFormSubmit}>
                 <input
                     name="search"

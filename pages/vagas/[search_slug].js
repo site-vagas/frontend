@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import JobsManager from '../../components/jobs/JobsManager';
+import PageHeader from '../../components/general/PageHeader';
 import styles from './../../styles/SearchResults.module.scss';
 
 function Jobs({ jobs }) {
@@ -10,19 +10,23 @@ function Jobs({ jobs }) {
     if ( router.isFallback ) { return <>Carregando...</> }
     return (
         <div className={ styles.SearchResults }>
-            <div className={ styles.header }>
-                <Link href="/">
-                    <a><p>Tickun <span>Encontre a sua vaga</span></p></a>
-                </Link>
-            </div>
+        
+            <PageHeader />
 
-            <JobsManager jobs={ jobs } />
+            <JobsManager
+                jobs={ jobs }
+                filters={[
+                    'state','city','organization','benefit',
+                    'type','role','category','subCategory'
+                ]}
+                replacers={{}}
+            />
         </div>
     )
 }
 
 export async function getStaticPaths(){
-    const paths = [{params: { search_slug: "vagas" }}];
+    const paths = [{params: { search_slug: "vagas-em-brasil" }}];
     return { paths, fallback: true }
 }
 
@@ -30,9 +34,7 @@ export async function getStaticProps({ params }){
     var state = undefined;
     var city = undefined;
     var query = undefined;
-    
-    var jobs = [];
-    
+    var jobs = [];    
     const states = [
         "rondonia",
         "acre",
@@ -64,9 +66,7 @@ export async function getStaticProps({ params }){
     ];
 
     const search_query = params.search_slug;
-
     query = search_query.replace(/-/g, " ").split(" em ")[0];
-
     if( search_query.split("-").slice(-1)[0] === "brasil" ){
         state = search_query
             .replace(/-/g," ")
@@ -88,7 +88,20 @@ export async function getStaticProps({ params }){
         }
     }
 
-    jobs = await fetch(`https://site-vagas.herokuapp.com/jobs/get/`);
+    // jobs = await fetch(`https://site-vagas.herokuapp.com/jobs/search/`,{
+    //     method: 'POST',
+    //     headers: {
+    //         'Accept': 'aaplication/json',
+    //         'Content-Type': 'application/json',
+    //         'Bearer': process.env.API_BEARER_TOKEN
+    //     },
+    //     body: JSON.stringify({
+    //         city: city || "",
+    //         state: state || "",
+    //         query: query || ""
+    //     })
+    // });
+    jobs = await fetch('https://site-vagas.herokuapp.com/jobs/get/', {headers:{'Bearer': process.env.API_BEARER_TOKEN}})
     jobs = await jobs.json();
 
     return {
