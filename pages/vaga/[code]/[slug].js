@@ -13,7 +13,6 @@ function Job({ job, relatedJobs }){
     const [footerApplyButton_display, setfooterApplyButton_display] = useState(false);
     const [applyWindow_display, setapplyWindow_display] = useState(false);
     const ApplyButtonRef = useRef(null);
-    const howLong = JobsTools.getHowLong(new Date(job.createdAt));
 
     useEffect( function setHandlePageScroll(){
         
@@ -95,6 +94,10 @@ function Job({ job, relatedJobs }){
         setapplyWindow_display(false);
     }
 
+    const getHowLong = () => {
+        return JobsTools.getHowLong(new Date(job.createdAt));
+    }
+
     if ( router.isFallback ) { return <>Carregando...</> }
     return(
         <>
@@ -141,7 +144,7 @@ function Job({ job, relatedJobs }){
                     </div>
 
                     <div className={styles.time}>
-                        <p element="howlong" howlong={howLong["text"]}>{ howLong["text"] }</p>
+                        <p element="howlong" howlong={getHowLong()["text"]}>{ getHowLong()["text"] }</p>
                     </div>
 
                     <div>
@@ -249,7 +252,7 @@ export async function getStaticPaths(){
     const paths = jobsData.map( (job) => ({
         params: { code: job.code, slug: job.slug }
     }));
-    return { paths, fallback: true }
+    return { paths, fallback: true } 
 }
 
 export async function getStaticProps({ params }){

@@ -88,26 +88,20 @@ export async function getStaticProps({ params }){
         }
     }
 
-    // console.log( JSON.stringify({
-    //     city: city || "",
-    //     state: state || "",
-    //     query: query || ""
-    // }))
-    // jobs = await fetch(`https://site-vagas.herokuapp.com/jobs/search`,{
-    //     method: 'POST',
-    //     headers: {
-    //         'Accept': 'application/json',
-    //         'Content-Type': 'application/json',
-    //         'Bearer': process.env.API_BEARER_TOKEN
-    //     },
-    //     body: JSON.stringify({
-    //         city: city || "",
-    //         // state: state || "",
-    //         state: "",
-    //         query: query || ""
-    //     })
-    // });
-    jobs = await fetch('https://site-vagas.herokuapp.com/jobs/get/', {headers:{'Bearer': process.env.API_BEARER_TOKEN}})
+    jobs = await fetch(`https://site-vagas.herokuapp.com/jobs/search`,{
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Bearer': process.env.API_BEARER_TOKEN
+        },
+        body: JSON.stringify({
+            city: city || "",
+            state: state || "",
+            query: query || ""
+        })
+    });
+    // jobs = await fetch('https://site-vagas.herokuapp.com/jobs/get/', {headers:{'Bearer': process.env.API_BEARER_TOKEN}})
     jobs = await jobs.json();
 
     return {
