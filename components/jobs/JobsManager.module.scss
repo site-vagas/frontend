@@ -162,7 +162,6 @@ $basic-color-hover: #0288d1;
                         }
                     }
                 }
-
                 
                 p[element="howlong"]{
                     width: 90%;
@@ -171,6 +170,7 @@ $basic-color-hover: #0288d1;
                     font-size: 12px;
                     color: #747474;
 
+                    &[howlong~="hora"],
                     &[howlong~="horas"],
                     &[howlong~="dia"],
                     &[howlong~="dias"]{

@@ -13,7 +13,7 @@ export default function Home() {
 
       <div>
         <h1>Tickun</h1>
-        <p>Encontre a vaga ideal com Você</p>
+        <p>Encontre a vaga ideal para Você</p>
         <JobForm/>
       </div>
     </div>

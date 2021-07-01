@@ -27,7 +27,7 @@ export default function Organization({ organization }){
             </div>
             <div>
             <div>
-                <h2>Nossas Vagas:</h2>
+                <h2>Nossas Vagas</h2>
             </div>
             <JobsManager
                 jobs={ organization.__jobs__ }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from 'next/image';
 import JobHorizontal from "./JobHorizontal";
 import styles from './JobsManager.module.scss';
@@ -8,123 +8,6 @@ import JobsFilter from './JobsFilter';
 
 export default function JobsManager(props){
 
-    // Constructor
-        // Tables
-            var tables = {
-                // Master
-                job : [],
-                state : [],
-                city : [],
-                organization : [],
-                category : [],
-                subCategory : [],
-                role : [],
-                benefit : [],
-                type : [],
-                // Relations
-                rel_job_and_organization : [],
-                rel_job_and_category : [],
-                rel_job_and_subCategory : [],
-                rel_job_and_role : [],
-                rel_job_and_benefit : [],
-                rel_job_and_type : []
-            }
-            // Aux Variables to Check who was added to table
-            var auxBuild_state = [];
-            var auxBuild_city = [];
-            var auxBuild_organization = [];
-            var auxBuild_category = [];
-            var auxBuild_subCategory = [];
-            var auxBuild_role = [];
-            var auxBuild_benefit = [];
-            var auxBuild_type = [];
-        // Keys to remove from Job Table to Normalize
-        const keys_to_remove_from_jobs = [
-            "__subCategories__",
-            "__benefits__",
-            "__types__",
-            "__organization__",
-            "__category__",
-            "__role__"
-        ]        
-      
-        // Build Tables
-        for( let job of props.jobs ){
-            // Build Tables
-                // State
-                if( props.filters.includes('state') && !auxBuild_state.includes(job.state) ){
-                    tables.state.push({ id: job.state, name: job.state });
-                    auxBuild_state.push( job.state );
-                };
-                // Cities
-                if( props.filters.includes('city') && !auxBuild_city.includes(job.city) ){
-                    tables.city.push({ id: job.city, name: job.city });
-                    auxBuild_city.push( job.city );
-                };
-                // Organizations
-                if(props.filters.includes('organization')){
-                    tables.rel_job_and_organization.push({ jobId: job.id, organizationId: job.__organization__.id });
-                    if( !auxBuild_organization.includes(job.__organization__.id) ) {
-                        tables.organization.push( job.__organization__ );
-                        auxBuild_organization.push( job.__organization__.id );
-                    };
-                }
-                // Category
-                if(props.filters.includes('category')){
-                    tables.rel_job_and_category.push({ jobId: job.id, categoryId: job.__category__.id });
-                    if( !auxBuild_category.includes(job.__category__.id) ) {
-                        tables.category.push( job.__category__ );
-                        auxBuild_category.push( job.__category__.id );
-                    };
-                }
-                // Role
-                if(props.filters.includes('role')){
-                    tables.rel_job_and_role.push({ jobId: job.id, roleId: job.__role__.id });
-                    if( !auxBuild_role.includes(job.__role__.id) ) {
-                        tables.role.push( job.__role__ );
-                        auxBuild_role.push( job.__role__.id );
-                    };
-                }
-                // SubCategories
-                if(props.filters.includes('subCategory')){
-                    for( let subCategory of job.__subCategories__ ){
-                        tables.rel_job_and_subCategory.push({ jobId: job.id, subCategoryId: subCategory.id });
-                        if( !auxBuild_subCategory.includes(subCategory.id) ){
-                            tables.subCategory.push(subCategory);
-                            auxBuild_subCategory.push(subCategory.id);
-                        }
-                    }
-                }
-                // Benefits
-                if(props.filters.includes('benefit')){
-                    for( let benefit of job.__benefits__ ){
-                        tables.rel_job_and_benefit.push({ jobId: job.id, benefitId: benefit.id });
-                        if( !auxBuild_benefit.includes(benefit.id) ){
-                            tables.benefit.push(benefit);
-                            auxBuild_benefit.push(benefit.id);
-                        }
-                    }
-                }
-                // Tipos
-                if(props.filters.includes('type')){
-                    for( let type of job.__types__ ){
-                        tables.rel_job_and_type.push({ jobId: job.id, Id: type.id });
-                        if( !auxBuild_type.includes(type.id) ){
-                            tables.type.push(type);
-                            auxBuild_type.push(type.id);
-                        }
-                    }
-                }
-            
-            var tempJob = {};
-            // Remove keys to normalize jobs Table
-            for ( let key of Object.keys(job) ){
-                if ( !keys_to_remove_from_jobs.includes(key) ){ tempJob[key] = job[key] };
-            }
-            tables.job.push(tempJob);
-        }
-            
-    // Filters
     const [filters, setFilters] = useState({
         state: [],
         city: [],
@@ -135,7 +18,129 @@ export default function JobsManager(props){
         benefit: [],
         type: []
     });
+    const [tables, setTables] = useState({});
+    const [ showFilterButton, setShowFilterButton ] = useState(false);
 
+    const build = () => {
+    
+        // Tables
+        var aux_tables = {
+            // Master
+            job : [],
+            state : [],
+            city : [],
+            organization : [],
+            category : [],
+            subCategory : [],
+            role : [],
+            benefit : [],
+            type : [],
+            // Relations
+            rel_job_and_organization : [],
+            rel_job_and_category : [],
+            rel_job_and_subCategory : [],
+            rel_job_and_role : [],
+            rel_job_and_benefit : [],
+            rel_job_and_type : []
+        }
+        // Aux Variables to Check who was added to table
+        var auxBuild_state = [];
+        var auxBuild_city = [];
+        var auxBuild_organization = [];
+        var auxBuild_category = [];
+        var auxBuild_subCategory = [];
+        var auxBuild_role = [];
+        var auxBuild_benefit = [];
+        var auxBuild_type = [];
+        // Keys to remove from Job Table to Normalize
+        const keys_to_remove_from_jobs = [
+            "__subCategories__",
+            "__benefits__",
+            "__types__",
+            "__organization__",
+            "__category__",
+            "__role__"
+        ]        
+    
+        // Build Tables
+        for( let job of props.jobs ){
+            // Build Tables
+                // State
+                if( props.filters.includes('state') && !auxBuild_state.includes(job.state) ){
+                    aux_tables.state.push({ id: job.state, name: job.state });
+                    auxBuild_state.push( job.state );
+                };
+                // Cities
+                if( props.filters.includes('city') && !auxBuild_city.includes(job.city) ){
+                    aux_tables.city.push({ id: job.city, name: job.city });
+                    auxBuild_city.push( job.city );
+                };
+                // Organizations
+                if(props.filters.includes('organization')){
+                    aux_tables.rel_job_and_organization.push({ jobId: job.id, organizationId: job.__organization__.id });
+                    if( !auxBuild_organization.includes(job.__organization__.id) ) {
+                        aux_tables.organization.push( job.__organization__ );
+                        auxBuild_organization.push( job.__organization__.id );
+                    };
+                }
+                // Category
+                if(props.filters.includes('category')){
+                    aux_tables.rel_job_and_category.push({ jobId: job.id, categoryId: job.__category__.id });
+                    if( !auxBuild_category.includes(job.__category__.id) ) {
+                        aux_tables.category.push( job.__category__ );
+                        auxBuild_category.push( job.__category__.id );
+                    };
+                }
+                // Role
+                if(props.filters.includes('role')){
+                    aux_tables.rel_job_and_role.push({ jobId: job.id, roleId: job.__role__.id });
+                    if( !auxBuild_role.includes(job.__role__.id) ) {
+                        aux_tables.role.push( job.__role__ );
+                        auxBuild_role.push( job.__role__.id );
+                    };
+                }
+                // SubCategories
+                if(props.filters.includes('subCategory')){
+                    for( let subCategory of job.__subCategories__ ){
+                        aux_tables.rel_job_and_subCategory.push({ jobId: job.id, subCategoryId: subCategory.id });
+                        if( !auxBuild_subCategory.includes(subCategory.id) ){
+                            aux_tables.subCategory.push(subCategory);
+                            auxBuild_subCategory.push(subCategory.id);
+                        }
+                    }
+                }
+                // Benefits
+                if(props.filters.includes('benefit')){
+                    for( let benefit of job.__benefits__ ){
+                        aux_tables.rel_job_and_benefit.push({ jobId: job.id, benefitId: benefit.id });
+                        if( !auxBuild_benefit.includes(benefit.id) ){
+                            aux_tables.benefit.push(benefit);
+                            auxBuild_benefit.push(benefit.id);
+                        }
+                    }
+                }
+                // Tipos
+                if(props.filters.includes('type')){
+                    for( let type of job.__types__ ){
+                        aux_tables.rel_job_and_type.push({ jobId: job.id, Id: type.id });
+                        if( !auxBuild_type.includes(type.id) ){
+                            aux_tables.type.push(type);
+                            auxBuild_type.push(type.id);
+                        }
+                    }
+                }
+            
+            var tempJob = {};
+            // Remove keys to normalize jobs Table
+            for ( let key of Object.keys(job) ){
+                if ( !keys_to_remove_from_jobs.includes(key) ){ tempJob[key] = job[key] };
+            }
+            aux_tables.job.push(tempJob);
+        }
+
+        return aux_tables
+    }    
+    
     const handleFilterChange = (item, itens) => {
         var tempFilters = {...filters};
         tempFilters[item] = itens;
@@ -158,7 +163,7 @@ export default function JobsManager(props){
                 "state": "job.state",
                 "city": "job.city"
             };
-    
+            
             if( props.filters.includes(item) && !(filters[item].length === 0 ) ){
                 let list = filters[item].map( (i) => {
                     return `'${i['id']}'`
@@ -200,6 +205,11 @@ export default function JobsManager(props){
                         LEFT JOIN ? as category
                             ON rel_job_and_category.categoryId = category.id
         
+                        LEFT JOIN ? as rel_job_and_subCategory
+                            ON rel_job_and_subCategory.jobId = job.id
+                        LEFT JOIN ? as subCategory
+                            ON rel_job_and_subCategory.subCategoryId = subCategory.id
+
                         LEFT JOIN ? as rel_job_and_role
                             ON rel_job_and_role.jobId = job.id
                         LEFT JOIN ? as role
@@ -216,14 +226,14 @@ export default function JobsManager(props){
                             ON rel_job_and_benefit.benefitId = benefit.id
                         WHERE
                                 1 = 1
-                            ${ buildSearchFilter('state') }
-                            ${ buildSearchFilter('city') }
                             ${ buildSearchFilter('organization') }
-                            ${ buildSearchFilter('benefit') }
                             ${ buildSearchFilter('category') }
                             ${ buildSearchFilter('subCategory') }
                             ${ buildSearchFilter('role') }
                             ${ buildSearchFilter('type') }
+                            ${ buildSearchFilter('benefit') }
+                            ${ buildSearchFilter('state') }
+                            ${ buildSearchFilter('city') }
                     )
         
                     SELECT
@@ -257,6 +267,8 @@ export default function JobsManager(props){
                     tables.organization,
                     tables.rel_job_and_category,
                     tables.category,
+                    tables.rel_job_and_subCategory,
+                    tables.subCategory,
                     tables.rel_job_and_role,
                     tables.role,
                     tables.rel_job_and_type,
@@ -285,6 +297,11 @@ export default function JobsManager(props){
                             ON rel_job_and_category.jobId = job.id
                         LEFT JOIN ? as category
                             ON rel_job_and_category.categoryId = category.id
+
+                        LEFT JOIN ? as rel_job_and_subCategory
+                            ON rel_job_and_subCategory.jobId = job.id
+                        LEFT JOIN ? as subCategory
+                            ON rel_job_and_subCategory.subCategoryId = subCategory.id
         
                         LEFT JOIN ? as rel_job_and_role
                             ON rel_job_and_role.jobId = job.id
@@ -306,6 +323,7 @@ export default function JobsManager(props){
                             ${ buildSearchFilter('city') }
                             ${ buildSearchFilter('benefit') }
                             ${ buildSearchFilter('category') }
+                            ${ buildSearchFilter('subCategory') }
                             ${ buildSearchFilter('subCategory') }
                             ${ buildSearchFilter('role') }
                             ${ buildSearchFilter('type') }
@@ -336,6 +354,8 @@ export default function JobsManager(props){
                     tables.job,
                     tables.rel_job_and_category,
                     tables.category,
+                    tables.rel_job_and_subCategory,
+                    tables.subCategory,
                     tables.rel_job_and_role,
                     tables.role,
                     tables.rel_job_and_type,
@@ -347,9 +367,14 @@ export default function JobsManager(props){
             }
         }
 
-        let serchData = getQuery();
-        const data = alasql(serchData[0],serchData[1]);
-        return data
+        var searchData = getQuery();
+        var query = searchData[0].replace('\n','');
+        var usedTables = searchData[1];
+        if (Object.keys(tables).length === 0){
+            return []
+        } else {
+            return alasql(query, usedTables)
+        }
     }
 
     const getListOfJobs = () => {
@@ -403,28 +428,39 @@ export default function JobsManager(props){
     }
     
     const getFilter = () => {
-        var filterData = {};
-        for(let item of props.filters){
-            filterData[item] = {itens: tables[item], selected: filters[item] }
-        }
+        if(!(Object.keys(tables).length === 0)) {
+            var filterData = {};
+            for(let item of props.filters){
+                filterData[item] = {itens: tables[item], selected: filters[item] }
+            }
 
-        return (
-            <JobsFilter
-                className={`${ styles.JobsFilter } ${ showFilterButton ? styles.ShowFilter : "" }`}
-                filters={ props.filters }
-                handleClose={ handleFilterShowState }
-                changesHandler={ handleFilterChange }
-                clearFilter={ handleFilterCleaning }
-                data={ filterData }
-            />
-        )
+            return (
+                <JobsFilter
+                    className={`${ styles.JobsFilter } ${ showFilterButton ? styles.ShowFilter : "" }`}
+                    filters={ props.filters }
+                    handleClose={ handleFilterShowState }
+                    changesHandler={ handleFilterChange }
+                    clearFilter={ handleFilterCleaning }
+                    data={ filterData }
+                />
+            )
+        } else {
+            return <></>
+        }
     }
 
-    const [ showFilterButton, setShowFilterButton ] = useState(false);
     const handleFilterShowState = () => {
         setShowFilterButton( !showFilterButton );
     }
 
+    useEffect(() => {
+        const tables = build();
+        setTables(tables)
+    }, [])
+
+    search()
+
+    // return (<></>)
     return (
         <div className={ styles.JobsManager }>
             <div className={ styles.Menu }>
@@ -441,7 +477,7 @@ export default function JobsManager(props){
             <div className={ styles.ContentBox }>
                 { getFilter() } 
 
-                { getListOfJobs() }
+                { getListOfJobs()  }
             </div>
         </div>
     )

@@ -13,6 +13,7 @@ function Job({ job, relatedJobs }){
     const [footerApplyButton_display, setfooterApplyButton_display] = useState(false);
     const [applyWindow_display, setapplyWindow_display] = useState(false);
     const ApplyButtonRef = useRef(null);
+    const howLong = JobsTools.getHowLong(new Date(job.createdAt));
 
     useEffect( function setHandlePageScroll(){
         
@@ -140,7 +141,7 @@ function Job({ job, relatedJobs }){
                     </div>
 
                     <div className={styles.time}>
-                        <p>Há 2 semanas</p>
+                        <p element="howlong" howlong={howLong["text"]}>{ howLong["text"] }</p>
                     </div>
 
                     <div>
@@ -219,7 +220,7 @@ function Job({ job, relatedJobs }){
                                 <p>{ job.applicationEmail ? job.applicationEmail : "" }</p>
                             </div>
                             
-                            <p className={`${job.applicationEmail ? "" : styles.applyWindow_optionsEmail}`}>Ou</p>
+                            <p className={`${(job.applicationEmail && job.applicationLink) ? "" : styles.applyWindow_otherText}`}>Ou</p>
 
                             <div className={`${job.applicationLink ? "" : styles.applyWindow_optionsLink}`}>
                                 <p>Utilize o link de candidatura abaixo:</p>
@@ -230,7 +231,7 @@ function Job({ job, relatedJobs }){
                         </div>
 
                         <div className={ styles.applyWindow_optionsFooter }>
-                            <p>Se destaque no processo seletivo. Descubra <a href="#">Como se preparar para uma entrevista.</a></p>
+                            <p>Boa Sorte 😄</p>
                         </div>
                     </div>
                 </div>

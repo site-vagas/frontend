@@ -88,16 +88,22 @@ export async function getStaticProps({ params }){
         }
     }
 
-    // jobs = await fetch(`https://site-vagas.herokuapp.com/jobs/search/`,{
+    // console.log( JSON.stringify({
+    //     city: city || "",
+    //     state: state || "",
+    //     query: query || ""
+    // }))
+    // jobs = await fetch(`https://site-vagas.herokuapp.com/jobs/search`,{
     //     method: 'POST',
     //     headers: {
-    //         'Accept': 'aaplication/json',
+    //         'Accept': 'application/json',
     //         'Content-Type': 'application/json',
     //         'Bearer': process.env.API_BEARER_TOKEN
     //     },
     //     body: JSON.stringify({
     //         city: city || "",
-    //         state: state || "",
+    //         // state: state || "",
+    //         state: "",
     //         query: query || ""
     //     })
     // });

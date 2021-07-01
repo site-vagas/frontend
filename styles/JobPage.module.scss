@@ -84,12 +84,26 @@ $basic-color-hover: #0288d1;
                 font-weight: bold;
                 color: #42af42;
             }
+            
         }
     }
 
     .time{
-        margin: 0px;
-        padding: 0px 0px 0px 20px;
+        p[element="howlong"]{
+            width: 90%;
+            margin: 5px auto 5px 10vw;
+            padding: 0px 10px;
+            font-size: 12px;
+            color: #747474;
+
+            &[howlong~="hora"],
+            &[howlong~="horas"],
+            &[howlong~="dia"],
+            &[howlong~="dias"]{
+                color: #42af42;
+                font-weight: bold;
+            }
+        }
     }
 
     .applyButton{
@@ -266,6 +280,10 @@ $basic-color-hover: #0288d1;
 
                 }
 
+                .applyWindow_otherText{
+                    display: none;
+                }
+
                 a {
                     font-size: 20px;
                     color: $basic-color;
@@ -298,6 +316,7 @@ $basic-color-hover: #0288d1;
                     font-size: 14px;
                     padding: 10px 0px;
                     margin: 0px;
+                    text-align: center;
                 }
             }            
         }
@@ -322,6 +341,12 @@ $basic-color-hover: #0288d1;
             width: 70%;
             margin-left: auto;
             margin-right: auto;
+        }
+
+        .time{
+            p[element="howlong"]{
+                margin-left: 5vw !important;
+            }
         }
     }
 
