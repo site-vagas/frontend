@@ -58,5 +58,10 @@ export async function getStaticPaths(){
 
 export async function getStaticProps({ params }){
     const organization = await Organizations.getJobs(params.code, params.slug);
-    return { props: { organization } }
+    return {
+        props: {
+            organization
+        },
+        revalidate: 86400
+    }
 }

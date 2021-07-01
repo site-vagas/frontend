@@ -98,6 +98,14 @@ function Job({ job, relatedJobs }){
         return JobsTools.getHowLong(new Date(job.createdAt));
     }
 
+    const getBenefits = () => {
+        return job.__benefits__.map( (benefit, key) =>{
+            return (
+                <li key={ key }>{ benefit.name }</li>
+            )
+        })
+    }
+
     if ( router.isFallback ) { return <>Carregando...</> }
     return(
         <>
@@ -177,6 +185,13 @@ function Job({ job, relatedJobs }){
                     <div>
                         <h2>Diferenciais</h2>
                         <div dangerouslySetInnerHTML={{__html: job.differentials}}/>
+                    </div>
+
+                    <div className={ styles.benefitsList }>
+                        <h2>Benefícios</h2>
+                        <ul>
+                            { getBenefits() }
+                        </ul>
                     </div>
                 </div>
 

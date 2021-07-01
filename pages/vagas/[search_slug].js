@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import JobsManager from '../../components/jobs/JobsManager';
 import PageHeader from '../../components/general/PageHeader';
 import styles from './../../styles/SearchResults.module.scss';
@@ -10,7 +11,9 @@ function Jobs({ jobs }) {
     if ( router.isFallback ) { return <>Carregando...</> }
     return (
         <div className={ styles.SearchResults }>
-        
+            <Head>
+                <title>Tickun - Resultados de Pesquisa</title>
+            </Head>
             <PageHeader />
 
             <JobsManager

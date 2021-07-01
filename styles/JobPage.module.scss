@@ -153,6 +153,12 @@ $basic-color-hover: #0288d1;
                 padding-left: 10px;
             }
         }
+
+        .benefitsList{
+            ul{
+                display: block;
+            }
+        }
     }
 
     .footerApplyButton{
@@ -346,6 +352,15 @@ $basic-color-hover: #0288d1;
         .time{
             p[element="howlong"]{
                 margin-left: 5vw !important;
+            }
+        }
+
+        .jobBody{
+            .benefitsList{
+                ul{
+                    display: grid;
+                    grid-template-columns: 33% 33% 33%;
+                }
             }
         }
     }
