@@ -22,7 +22,7 @@ class MyDocument extends Document {
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
 
-              gtag('config', 'G-EVMPG750BL', {
+              gtag('config', '${process.env.GOOGLE_ANALYTICS_KEY}', {
                 page_path: window.location.pathname
               });`}}/>
         </Head>

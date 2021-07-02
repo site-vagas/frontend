@@ -41,6 +41,7 @@ export default function Organization({ organization }){
                     "organizationName": organization.name
 
                 }}
+                dontMakeNewSearch={ true }
                 />
             </div>
         </div>

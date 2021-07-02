@@ -380,6 +380,13 @@ export default function JobsManager(props){
     const getListOfJobs = () => {
         // Build the List of Jobs that gonna be presented at display
         if( props.jobs.length === 0 ){
+            if( props.dontMakeNewSearch ){
+                return(
+                    <div className={ styles.noFilterMatches }>
+                        <p>Nenhuma vaga cadastrada.</p>
+                    </div>
+                )
+            }
             return(
                 <div className={ styles.JobsNotFound }>
                     <p>Nenhuma vaga foi encontrada.</p>
