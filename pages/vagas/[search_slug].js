@@ -3,18 +3,26 @@ import Head from 'next/head';
 import JobsManager from '../../components/jobs/JobsManager';
 import PageHeader from '../../components/general/PageHeader';
 import styles from './../../styles/SearchResults.module.scss';
+import { string_to_slug } from '../../tools';
 
 function Jobs({ jobs }) {
 
     const router = useRouter();
-
+    
+    const getSearchTitle = () => {
+        var search = router.query['search_slug'];
+        console.log(search)
+        search = search.replace(/-/g, ' ').replace(/(^\w{1}|(?<=\s)\w{1})/g, (l) => { return l.toUpperCase() });
+        return `Vagas de emprego para ${search}`
+    }
+     
     if ( router.isFallback ) { return <>Carregando...</> }
     return (
         <div className={ styles.SearchResults }>
             <Head>
-                <title>Tickun - Resultados de Pesquisa</title>
+                <title>Tickun - { getSearchTitle() }</title>
             </Head>
-            <PageHeader />
+            <PageHeader/>
 
             <JobsManager
                 jobs={ jobs }
@@ -34,64 +42,9 @@ export async function getStaticPaths(){
 }
 
 export async function getStaticProps({ params }){
-    var state = undefined;
-    var city = undefined;
-    var query = undefined;
-    var jobs = [];    
-    const states = [
-        "rondonia",
-        "acre",
-        "amazonas",
-        "roraima",
-        "para",
-        "amapa",
-        "tocantins",
-        "maranhao",
-        "piaui",
-        "ceara",
-        "rio-grande-do-norte",
-        "paraiba",
-        "pernambuco",
-        "alagoas",
-        "sergipe",
-        "bahia",
-        "minas-gerais",
-        "espirito-santo",
-        "rio-de-janeiro",
-        "sao-paulo",
-        "parana",
-        "santa-catarina",
-        "rio-grande-do-sul",
-        "mato-grosso-do-sul",
-        "mato-grosso",
-        "goias",
-        "distrito-federal"
-    ];
+    const search_query = string_to_slug(params.search_slug);
 
-    const search_query = params.search_slug;
-    query = search_query.replace(/-/g, " ").split(" em ")[0];
-    if( search_query.split("-").slice(-1)[0] === "brasil" ){
-        state = search_query
-            .replace(/-/g," ")
-            .replace("brasil", "")
-            .split(" em ")
-        .slice(-1)[0];
-    } else {
-        const regionSearch = search_query
-            .split("-em-")
-            .slice(-1)[0];
-
-        for( let stateOpt of states ){
-            if ( regionSearch.includes(stateOpt) ){
-                state = stateOpt.replace(/-/g, " ");
-                city = regionSearch
-                    .replace(`-${stateOpt}`, "")
-                    .replace(/-/g, " ");
-            }
-        }
-    }
-
-    jobs = await fetch(`https://site-vagas.herokuapp.com/jobs/search`,{
+    var jobs = await fetch(`https://site-vagas.herokuapp.com/jobs/search`,{
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -99,12 +52,9 @@ export async function getStaticProps({ params }){
             'Bearer': process.env.API_BEARER_TOKEN
         },
         body: JSON.stringify({
-            city: city || "",
-            state: state || "",
-            query: query || ""
+            query: search_query
         })
     });
-    // jobs = await fetch('https://site-vagas.herokuapp.com/jobs/get/', {headers:{'Bearer': process.env.API_BEARER_TOKEN}})
     jobs = await jobs.json();
 
     return {

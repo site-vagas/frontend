@@ -12,10 +12,11 @@ class MyDocument extends Document {
         <Head>
             <meta name="content-type" content="text/html;chartset=utf-8" />
             <meta name="theme-color" content="#0288d1"/>
-            <link rel="icon" href="/favicon.ico" />
+            <link rel="icon" href="/favicon.png" />
+            <link rel="icon" sizes="192x192" href="/favicon.png" />
 
             {/* <!-- Global site tag (gtag.js) - Google Analytics --> */}
-            <script async src="https://www.googletagmanager.com/gtag/js?id=G-EVMPG750BL"></script>
+            <script async src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GOOGLE_ANALYTICS_KEY}`}></script>
             <script dangerouslySetInnerHTML={{
               __html: `
               window.dataLayer = window.dataLayer || [];

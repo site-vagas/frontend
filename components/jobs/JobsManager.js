@@ -8,7 +8,7 @@ import JobsFilter from './JobsFilter';
 
 export default function JobsManager(props){
 
-    const [filters, setFilters] = useState({
+    const [ filters, setFilters ] = useState({
         state: [],
         city: [],
         organization: [],
@@ -18,11 +18,28 @@ export default function JobsManager(props){
         benefit: [],
         type: []
     });
-    const [tables, setTables] = useState({});
+    const [tables, setTables] = useState({
+        // Master
+        job : [],
+        state : [],
+        city : [],
+        organization : [],
+        category : [],
+        subCategory : [],
+        role : [],
+        benefit : [],
+        type : [],
+        // Relations
+        rel_job_and_organization : [],
+        rel_job_and_category : [],
+        rel_job_and_subCategory : [],
+        rel_job_and_role : [],
+        rel_job_and_benefit : [],
+        rel_job_and_type : []
+    });
     const [ showFilterButton, setShowFilterButton ] = useState(false);
 
     const build = () => {
-    
         // Tables
         var aux_tables = {
             // Master
@@ -60,8 +77,8 @@ export default function JobsManager(props){
             "__organization__",
             "__category__",
             "__role__"
-        ]        
-    
+        ];
+
         // Build Tables
         for( let job of props.jobs ){
             // Build Tables
@@ -139,8 +156,8 @@ export default function JobsManager(props){
         }
 
         return aux_tables
-    }    
-    
+    } 
+        
     const handleFilterChange = (item, itens) => {
         var tempFilters = {...filters};
         tempFilters[item] = itens;
@@ -154,6 +171,32 @@ export default function JobsManager(props){
         }
         
         setFilters(tempFilters);
+    }
+
+    const handleFilterShowState = () => {
+        setShowFilterButton( !showFilterButton );
+    }
+
+    const getFilter = () => {
+        if(!(Object.keys(tables).length === 0)) {
+            var filterData = {};
+            for(let item of props.filters){
+                filterData[item] = {itens: tables[item], selected: filters[item] }
+            }
+
+            return (
+                <JobsFilter
+                    className={`${ styles.JobsFilter } ${ showFilterButton ? styles.ShowFilter : "" }`}
+                    filters={ props.filters }
+                    handleClose={ handleFilterShowState }
+                    changesHandler={ handleFilterChange }
+                    clearFilter={ handleFilterCleaning }
+                    data={ filterData }
+                />
+            )
+        } else {
+            return <></>
+        }
     }
 
     const search = () => {
@@ -373,12 +416,14 @@ export default function JobsManager(props){
         if (Object.keys(tables).length === 0){
             return []
         } else {
-            return alasql(query, usedTables)
+            let searchData = alasql(query, usedTables);
+            return searchData
         }
     }
 
     const getListOfJobs = () => {
         // Build the List of Jobs that gonna be presented at display
+
         if( props.jobs.length === 0 ){
             if( props.dontMakeNewSearch ){
                 return(
@@ -412,7 +457,7 @@ export default function JobsManager(props){
                 "organizationName":  props.replacers["organizationName"] ? props.replacers["organizationName"] : undefined
             };
 
-            for(let job of searchResults){                
+            for(let job of searchResults){
                 jobs.push(
                     <JobHorizontal
                         job={ job }
@@ -424,7 +469,7 @@ export default function JobsManager(props){
 
                 jobKey = jobKey + 1;
             }
-
+            
             return(
                 <div className={ styles.ListOfJobs }>
                     <p>{`${ searchResults.length } Vagas Encontradas`}</p>
@@ -432,42 +477,14 @@ export default function JobsManager(props){
                 </div>
             )
         }
+        
     }
     
-    const getFilter = () => {
-        if(!(Object.keys(tables).length === 0)) {
-            var filterData = {};
-            for(let item of props.filters){
-                filterData[item] = {itens: tables[item], selected: filters[item] }
-            }
-
-            return (
-                <JobsFilter
-                    className={`${ styles.JobsFilter } ${ showFilterButton ? styles.ShowFilter : "" }`}
-                    filters={ props.filters }
-                    handleClose={ handleFilterShowState }
-                    changesHandler={ handleFilterChange }
-                    clearFilter={ handleFilterCleaning }
-                    data={ filterData }
-                />
-            )
-        } else {
-            return <></>
-        }
-    }
-
-    const handleFilterShowState = () => {
-        setShowFilterButton( !showFilterButton );
-    }
-
     useEffect(() => {
         const tables = build();
         setTables(tables)
     }, [])
 
-    search()
-
-    // return (<></>)
     return (
         <div className={ styles.JobsManager }>
             <div className={ styles.Menu }>

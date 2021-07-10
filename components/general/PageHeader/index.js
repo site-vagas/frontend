@@ -4,7 +4,7 @@ import JobForm from '../../jobs/JobForm';
 import Image from "next/image";
 import { useState } from 'react';
 
-export default function PageHeader(){
+export default function PageHeader( props ){
 
     const [jobFormDisplay, setJobFormDisplay] = useState(false);
 

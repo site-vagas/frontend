@@ -52,9 +52,20 @@ exports.JobsTools = {
       <p>Principais Atividades</p>
       <br>
       ${ job.mainActivities }
+
       <br>
       <br>
-      <p>Para saber mais sobre esta vaga e se candidatar, acesse o nosso site clicando no botão "Acesse em Tickun".</p>
+
+      <p>Requisitos Obrigatórios</p>
+      <br>
+      ${ job.mandatoryReqs }
+
+      <br>
+      <br>
+
+      <p>Diferenciais</p>
+      <br>
+      ${ job.differentials }
     `;
 
     var employmentType = [];
