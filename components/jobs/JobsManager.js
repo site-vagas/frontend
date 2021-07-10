@@ -178,7 +178,7 @@ export default function JobsManager(props){
     }
 
     const getFilter = () => {
-        if(!(Object.keys(tables).length === 0)) {
+        if(!(tables['job'].length === 0)) {
             var filterData = {};
             for(let item of props.filters){
                 filterData[item] = {itens: tables[item], selected: filters[item] }
