@@ -13,7 +13,7 @@ export default function Organization({ organization }){
         <>
         <Head>
             <title>{ `Tickun - ${organization.name}` }</title>
-            <description>{ `Acompanhe as vagas da ${ organization.name } e encontre grandes oportunidades para você no mercado de trabalho.` }</description>
+            <meta name="description" content={`Acompanhe as vagas da ${ organization.name } e encontre grandes oportunidades para você no mercado de trabalho.` }/>
             <script data-ad-client="ca-pub-6542168921640292" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
         </Head>
         <PageHeader />
