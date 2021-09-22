@@ -457,17 +457,32 @@ export default function JobsManager(props){
                 "organizationName":  props.replacers["organizationName"] ? props.replacers["organizationName"] : undefined
             };
 
-            for(let job of searchResults){
+            for(var i = 0; i < searchResults.length; i++){
+                var job = searchResults[i];
                 jobs.push(
                     <JobHorizontal
                         job={ job }
                         className={ styles.JobHorizontal }
-                        key={ jobKey }
+                        key={ i }
                         replacers={ replacers }
                     />
                 );
-
-                jobKey = jobKey + 1;
+                // if ( ( (i + 1)%3 === 0) && (i !== 0)){
+                //     jobs.push(
+                //         <>
+                //             <ins class="adsbygoogle"
+                //                 style="display:block"
+                //                 data-ad-format="fluid"
+                //                 data-ad-layout-key="-ge-2s-7h-23+1ba"
+                //                 data-ad-client="ca-pub-6542168921640292"
+                //                 data-ad-slot="9792148128">
+                //             </ins>
+                //             <script>
+                //                 (adsbygoogle = window.adsbygoogle || []).push({});
+                //             </script>
+                //         </>
+                //     )
+                // }
             }
             
             return(

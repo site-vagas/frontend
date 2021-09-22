@@ -3,12 +3,19 @@ import { Organizations } from './../../../api';
 import styles from './../../../styles/OrganizationPage.module.scss';
 import JobsManager from './../../../components/jobs/JobsManager';
 import PageHeader from '../../../components/general/PageHeader';
+import Head from 'next/head';
+
 export default function Organization({ organization }){
     const router = useRouter();
 
     if ( router.isFallback ) { return <>Carregando...</> }
     return(
         <>
+        <Head>
+            <title>{ `Tickun - ${organization.name}` }</title>
+            <description>{ `Acompanhe as vagas da ${ organization.name } e encontre grandes oportunidades para você no mercado de trabalho.` }</description>
+            <script data-ad-client="ca-pub-6542168921640292" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        </Head>
         <PageHeader />
         <div className={ styles.Organization }>
             <div className={ styles.Header }>

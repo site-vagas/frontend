@@ -74,6 +74,8 @@ function Job({ job, relatedJobs }){
                 <script type="application/ld+json">
                     { JSON.stringify( JobsTools.buildStrucData(job) ) }
                 </script>
+
+                <script data-ad-client="ca-pub-6542168921640292" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             </Head>
         )
     }

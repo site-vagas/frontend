@@ -11,7 +11,6 @@ function Jobs({ jobs }) {
     
     const getSearchTitle = () => {
         var search = router.query['search_slug'];
-        console.log(search)
         search = search.replace(/-/g, ' ').replace(/(^\w{1}|(?<=\s)\w{1})/g, (l) => { return l.toUpperCase() });
         return `Vagas de emprego para ${search}`
     }
@@ -21,6 +20,7 @@ function Jobs({ jobs }) {
         <div className={ styles.SearchResults }>
             <Head>
                 <title>Tickun - { getSearchTitle() }</title>
+                <script data-ad-client="ca-pub-6542168921640292" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             </Head>
             <PageHeader/>
 
