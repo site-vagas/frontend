@@ -301,7 +301,7 @@ export async function getStaticProps({ params }){
             job,
             relatedJobs,
         },
-        revalidate: 86400
+        revalidate: 3600
     }
 }
 
