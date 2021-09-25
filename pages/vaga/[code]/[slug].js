@@ -269,7 +269,7 @@ export async function getStaticPaths(){
     const paths = jobsData.map( (job) => ({
         params: { code: job.code, slug: job.slug }
     }));
-    return { paths, fallback: true } 
+    return { paths, fallback: 'blocking' } 
 }
 
 export async function getStaticProps({ params }){
