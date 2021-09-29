@@ -90,7 +90,7 @@ exports.JobsTools = {
         case 'Meio Período':
           employmentType.push("PART_TIME");
           break;
-        case 'Home Office':
+        case 'Remoto':
           jobLocationType = 'TELECOMMUTE';
           break;
         default:

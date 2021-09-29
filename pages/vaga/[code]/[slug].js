@@ -34,22 +34,42 @@ function Job({ job, relatedJobs }){
         }
     })
 
+    const handleCloseButton_jobWindow = () => {
+        if( window.history.length === 1 ) {
+            router.push("/");
+        } else {
+            router.back();
+        }
+    }
+
+    const handleApplyButtonClick = () => {
+        setapplyWindow_display(true);
+    }
+
+    const handleCloseButton_applyWindow = () => {
+        setapplyWindow_display(false);
+    }
+
+    const getHowLong = () => {
+        return JobsTools.getHowLong(new Date(job.createdAt));
+    }
+
+    const isRemoteJob = () => {
+        const REMOTE_JOB_TYPE_ID = "278d7a24-e358-4979-aba8-3a0d50190b05";
+        
+        job_types = job.__types__.map((type) => {
+            return type.name
+        });
+
+        return job_types.includes(REMOTE_JOB_TYPE_ID);
+    }
+
     const getPageHead = () => {
         // Build the Page Title
-        var isHomeOfficeJob = false;
-        for(let type of job.__types__){
-            if( type.id === process.env.HOME_OFFICE_TYPE_ID ){
-                isHomeOfficeJob = true;
-            }
-        };
-
-        var pagetitle;
-        if( isHomeOfficeJob ){
+        var pagetitle = `Vaga - ${ job.title } em ${ job.__organization__.name }`;;
+        if( isRemoteJob ){
             pagetitle = `Vaga Remota - ${ job.title } em ${ job.__organization__.name }`;
-        } else {
-            pagetitle = `Vaga - ${ job.title } em ${ job.__organization__.name }`;
         }
-
         function buildMetaArticleTags(){
             return job.__subCategories__.map( (sc, key) =>{
                 return <meta key={ key } property="og:article:tag" content={ sc.name } />
@@ -80,24 +100,14 @@ function Job({ job, relatedJobs }){
         )
     }
 
-    const handleCloseButton_jobWindow = () => {
-        if( window.history.length === 1 ) {
-            router.push("/");
-        } else {
-            router.back();
+    const getJobTitle = () => {
+        var jobTitle = job.title;
+        
+        if(isRemoteJob){
+            jobTitle = `${job.title} - Vaga Remota`;
         }
-    }
 
-    const handleApplyButtonClick = () => {
-        setapplyWindow_display(true);
-    }
-
-    const handleCloseButton_applyWindow = () => {
-        setapplyWindow_display(false);
-    }
-
-    const getHowLong = () => {
-        return JobsTools.getHowLong(new Date(job.createdAt));
+        return jobTitle;
     }
 
     const getBenefits = () => {
@@ -123,7 +133,7 @@ function Job({ job, relatedJobs }){
 
                 <div>
                     <div className={styles.jobTitle}>
-                        <h1>{ job.title }</h1>
+                        <h1>{ getJobTitle() }</h1>
                     </div>
                     <div className={styles.jobHeader}>
                         <div>
@@ -143,6 +153,7 @@ function Job({ job, relatedJobs }){
                                 </Link>
                                 <p>
                                     <span>{job.city}</span>
+                                    <span> - </span>
                                     <span>{job.state}</span>
                                 </p>
                                 <p>
@@ -285,8 +296,8 @@ export async function getStaticProps({ params }){
     } catch( err) {
         job = undefined;
     }
-    console.log("====== JOB -=======")
-    console.log(job)
+
+
     if ( job ){
         relatedJobs = await fetch(`https://site-vagas.herokuapp.com/jobs/related/${job.id}/${job.__category__.id}`, {
             headers: {'Bearer': process.env.API_BEARER_TOKEN}
