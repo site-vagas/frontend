@@ -281,10 +281,12 @@ export async function getStaticProps({ params }){
         headers.append('Bearer', process.env.API_BEARER_TOKEN);
         const resp = await fetch(url, {method: 'GET', headers:headers});
         job = await resp.json();
+        job = job.id ? job : null;
     } catch( err) {
         job = undefined;
     }
-
+    console.log("====== JOB -=======")
+    console.log(job)
     if ( job ){
         relatedJobs = await fetch(`https://site-vagas.herokuapp.com/jobs/related/${job.id}/${job.__category__.id}`, {
             headers: {'Bearer': process.env.API_BEARER_TOKEN}

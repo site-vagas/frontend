@@ -37,7 +37,7 @@ export default function Organization({ organization }){
                 <h2>Nossas Vagas</h2>
             </div>
             <JobsManager
-                jobs={ organization.__jobs__ }
+                jobs={ organization.__jobs__ || [] }
                 filters={[
                     'state','city','benefit',
                     'type','role','category',
@@ -70,6 +70,6 @@ export async function getStaticProps({ params }){
         props: {
             organization
         },
-        revalidate: 86400
+        revalidate: 21600
     }
 }
