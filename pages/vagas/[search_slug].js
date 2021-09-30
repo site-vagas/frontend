@@ -60,7 +60,9 @@ export async function getStaticProps({ params }){
     return {
         props: {
             jobs
-        }
+        },
+
+        revalidate: 3600
     }
 }
 
