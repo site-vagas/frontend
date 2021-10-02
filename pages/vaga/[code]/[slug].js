@@ -5,8 +5,8 @@ import styles from './../../../styles/JobPage.module.scss';
 import RelatedJob from '../../../components/pages/job/RelatedJobs';
 import PageHeader from '../../../components/general/PageHeader';
 import Link from 'next/link';
-import { Jobs as JobsAPI } from './../../../api';
-import { JobsTools } from '../../../tools';
+import { JobsTools, CTA_Telegram } from '../../../tools';
+import Image from 'next/image';
 
 function Job({ job, relatedJobs }){
     const router = useRouter();
@@ -209,7 +209,27 @@ function Job({ job, relatedJobs }){
                 </div>
 
                 <div>
-                    <div className={styles.Benefits}>
+                    <div className={styles.CTA_Telegram}>
+                        <div></div>
+                        <div className={styles.CTA_Telegram_logo}>
+                            <Image
+                                src="/imgs/telegram.png"
+                                alt="Telegram"
+                                width="80"
+                                height="80"
+                            />
+                        </div>
+                        <div className={styles.CTA_Telegram_call}>
+                            <p>{`Esteja por dentro das novas vagas de ${CTA_Telegram(job.__subCategories__[0]['id'])['name']}`}</p>
+                            <p>Participe do nosso grupo no Telegram. Divulgamos todas as nossas vagas por lá.</p>
+                            <a
+                                href={CTA_Telegram(job.__subCategories__[0]['id'])['telegram_link']}
+                                target="_blank"
+                            >
+                                Acessar Grupo  
+                            </a>
+                        </div>
+                        <div></div>
                     </div>
                 </div>
 

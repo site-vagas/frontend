@@ -39,6 +39,94 @@ exports.getCookie = function(cname) {
     return "";
 }
 
+exports.CTA_Telegram = function(job_subCategory) {
+  const GROUPS_MAP = {
+    "34850f30-2add-4fcd-b643-acbca0bf0cdf":{
+      //Engenharia de Dados
+      "name":"Dados",
+      "telegram_link":"https://t.me/tickun_vagas_Dados"
+    },
+    "d6f609ef-1eaf-402d-833f-e136a0082812": {
+      //Ciência de Dados
+      "name":"Dados",
+      "telegram_link":"https://t.me/tickun_vagas_Dados"
+    },
+    "87ee8835-a314-453c-8a4a-db7ba40c7b92": {
+      //Análise de Dados
+      "name":"Dados",
+      "telegram_link":"https://t.me/tickun_vagas_Dados"
+    },
+    "f088f4a7-e433-4147-9244-ca34b1c4acd9": {
+      //Farmácia
+      "name":"Farmácia",
+      "telegram_link":"https://t.me/tickun_vagas_farmacia"
+    },
+    "0f49d7fe-22c3-472d-9f34-b3c2a443021b": {
+      //Nutrição
+      "name":"Nutrição",
+      "telegram_link":""
+    },
+    "b9a7f375-ea9e-43db-8e92-2fef38bad7ea": {
+      //Fisioterapia
+      "name":"Fisioterapia",
+      "telegram_link":""
+    },
+    "f1276440-916a-443d-b164-05d643b0b7ab": {
+      //Medicina
+      "name":"Medicina",
+      "telegram_link":""
+    },
+    "6a7d0615-62d5-40d0-8b09-fea3b709baaf": {
+      //Odontologia
+      "name":"Odonto",
+      "telegram_link":"https://t.me/tickun_vagas_dentista"
+    },
+    "eb2b408f-1ced-4fb8-875b-80083cf3537e": {
+      //Vendas
+      "name":"Comercial",
+      "telegram_link":""
+    },
+    "fd8397f9-6c5d-454c-ac5d-1b1e1ca1a446": {
+      //Crédito e Cobrança
+      "name":"Financeiro",
+      "telegram_link":""
+    },
+    "60b047f6-cfd2-41b4-9709-5fbf8eef1aa5": {
+      //Infra Estrutura
+      "name":"TI",
+      "telegram_link":"https://t.me/tickun_vagas_ti"
+    },
+    "aed707a5-11dc-43d9-beaf-e08c18990d17": {
+      //Desenvolvimento
+      "name":"TI",
+      "telegram_link":"https://t.me/tickun_vagas_ti"
+    },
+    "d0319b44-0d4e-4e70-8888-d954e2658783": {
+      //Sistemas
+      "name":"TI",
+      "telegram_link":"https://t.me/tickun_vagas_ti"
+    },
+    "dfaf973e-4eab-4eac-a2d8-6833a30d0dc0": {
+      //Inteligência Comercial
+      "name":"Comercial",
+      "telegram_link":""
+    },
+    "f928b177-0ab4-469e-a6f6-d6bbcefc59a1": {
+      //Clientes
+      "name":"Comercial",
+      "telegram_link":""
+    },
+    "50a64c67-c53e-4665-ba6a-de219f3a183d": {
+      //Segurança
+      "name":"TI",
+      "telegram_link":""
+    },
+  }
+
+
+  return GROUPS_MAP[job_subCategory]
+}
+
 exports.JobsTools = {
   buildStrucData: function(job){
     const jobDescription = `
