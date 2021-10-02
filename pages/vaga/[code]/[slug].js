@@ -67,7 +67,7 @@ function Job({ job, relatedJobs }){
     const getPageHead = () => {
         // Build the Page Title
         var pagetitle = `Vaga - ${ job.title } em ${ job.__organization__.name }`;;
-        if( isRemoteJob ){
+        if( isRemoteJob() ){
             pagetitle = `Vaga Remota - ${ job.title } em ${ job.__organization__.name }`;
         }
         function buildMetaArticleTags(){
