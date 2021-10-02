@@ -57,10 +57,10 @@ function Job({ job, relatedJobs }){
     const isRemoteJob = () => {
         const REMOTE_JOB_TYPE_ID = "278d7a24-e358-4979-aba8-3a0d50190b05";
         
-        job_types = job.__types__.map((type) => {
-            return type.name
+        const job_types = job.__types__.map((type) => {
+            return type.id
         });
-
+        
         return job_types.includes(REMOTE_JOB_TYPE_ID);
     }
 
@@ -103,7 +103,7 @@ function Job({ job, relatedJobs }){
     const getJobTitle = () => {
         var jobTitle = job.title;
         
-        if(isRemoteJob){
+        if(isRemoteJob()){
             jobTitle = `${job.title} - Vaga Remota`;
         }
 
