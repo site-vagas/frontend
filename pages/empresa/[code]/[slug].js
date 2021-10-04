@@ -70,6 +70,6 @@ export async function getStaticProps({ params }){
         props: {
             organization
         },
-        revalidate: 21600
+        revalidate: 3600
     }
 }
