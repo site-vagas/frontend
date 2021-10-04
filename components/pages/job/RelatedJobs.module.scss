@@ -1,3 +1,6 @@
+$basic-color: #03a9f4;
+$basic-color-hover: #0288d1;
+
 .RelatedJobs{
     display: flex;
     flex: row;
@@ -11,23 +14,83 @@
         border-radius: 5px;
         min-width: 250px;
 
-        a {
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 16px;
+        // Header
+        & > div:first-child{
+            min-height: 45px;
+            max-height: 45px;
+            overflow: hidden;
+
+            // Job Name
+            a {
+                font-weight: 600;
+                cursor: pointer;
+                font-size: 16px;
+                color: $basic-color;
+    
+                &:hover{
+                    color: $basic-color-hover;
+                }
+            }
+        }
+        
+        // Role and Remote
+        & > div:nth-child(2){
+            margin-bottom: 5px;
+            margin: 0;
+            font-size: 14px;
+            color: #545454;
+
+            p,span{
+                margin: 0;
+            }
         }
 
-        & > div{
-            p:first-child{
-                margin: 0;
-                font-size: 14px;
-                color: #545454;
+        // Organization
+        & > div:nth-child(3){
+            display: grid;
+            grid-template-columns: 30% 70%;
+            height: 65px;
+            
+            // Logo
+            div:first-child{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                img{
+                    width: 50px;
+                }
             }
 
-            p:last-child{
-                margin: 0;
+            // Name
+            div:nth-child(2){
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                img{
+                    width: 50px;
+                }
+            }
+        }
+
+        // Place and How Long
+        & > div:nth-child(4){
+            P{
+                display: flex;
+                justify-content: space-between;
                 font-size: 14px;
                 color: #545454;
+                
+                p[element="howlong"]{
+                    &[howlong~="hora"],
+                    &[howlong~="horas"],
+                    &[howlong~="dia"],
+                    &[howlong~="dias"]{
+                        color: #42af42;
+                        font-weight: bold;
+                    }
+                }
             }
         }
     }
