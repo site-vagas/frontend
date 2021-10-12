@@ -81,6 +81,11 @@ $basic-color-hover: #0288d1;
                 justify-content: space-between;
                 font-size: 14px;
                 color: #545454;
+                margin-bottom: 0px;
+
+                p{
+                    margin-bottom: 0px;
+                }
                 
                 p[element="howlong"]{
                     &[howlong~="hora"],

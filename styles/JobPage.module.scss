@@ -405,10 +405,38 @@ $basic-color-hover: #0288d1;
         }
 
         .jobBody{
+            ul{
+                li{
+                    list-style: none;
+
+                    &::before{
+                        content: "- ";
+                    }
+                }
+            }
             .benefitsList{
                 ul{
                     display: grid;
                     grid-template-columns: 33% 33% 33%;
+
+                    li{
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        list-style: none;
+
+                        &::before{
+                            content: none;
+                        }
+
+                        .benefitIcon{
+                            margin-right: 5px;
+                            img{
+                                width: 25px;
+                                height: 25px;
+                            }
+                        }
+                    }
                 }
             }
         }

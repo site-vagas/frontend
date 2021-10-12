@@ -113,7 +113,15 @@ function Job({ job, relatedJobs }){
     const getBenefits = () => {
         return job.__benefits__.map( (benefit, key) =>{
             return (
-                <li key={ key }>{ benefit.name }</li>
+                <li key={ key }>
+                    <div className={styles.benefitIcon}>
+                        <img
+                            src={`/imgs/icons/benefits/${benefit.id}.png`}
+                            alt={benefit.name}
+                        />
+                    </div>
+                    <p>{ benefit.name }</p>
+                </li>
             )
         })
     }
@@ -186,7 +194,7 @@ function Job({ job, relatedJobs }){
                     </div>
 
                     <div>
-                        <h2>Principais Atividade</h2>
+                        <h2>Principais Atividades</h2>
                         <div dangerouslySetInnerHTML={{__html: job.mainActivities}}/>
                     </div>
 
