@@ -110,13 +110,29 @@ function Job({ job, relatedJobs }){
         return jobTitle;
     }
 
+    const getTypes = () => {
+        return job.__types__.map( (type, key) =>{
+            return (
+                <li key={ key }>
+                    <div className={styles.typeIcon}>
+                        <img
+                            src={`/imgs/icons/jobTypes/${type.id}.png`}
+                            alt={type.name}
+                        />
+                    </div>
+                    <p>{ type.name }</p>
+                </li>
+            )
+        })
+    }
+
     const getBenefits = () => {
         return job.__benefits__.map( (benefit, key) =>{
             return (
                 <li key={ key }>
                     <div className={styles.benefitIcon}>
                         <img
-                            src={`/imgs/icons/benefits/${benefit.id}.png`}
+                            src={`/imgs/icons/jobBenefits/${benefit.id}.png`}
                             alt={benefit.name}
                         />
                     </div>
@@ -188,6 +204,12 @@ function Job({ job, relatedJobs }){
                 <hr></hr>
 
                 <div className={styles.jobBody}>
+                    <div className={ styles.typesList }>
+                        <ul>
+                            { getTypes() }
+                        </ul>
+                    </div>
+
                     <div>
                         <h2>Descrição da Vaga</h2>
                         <div dangerouslySetInnerHTML={{__html: job.description}}/>

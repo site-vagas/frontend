@@ -157,6 +157,51 @@ $basic-color-hover: #0288d1;
         .benefitsList{
             ul{
                 display: block;
+
+                li{
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    list-style: none;
+
+                    &::before{
+                        content: none;
+                    }
+
+                    .benefitIcon{
+                        margin-right: 5px;
+                        img{
+                            width: 30px;
+                            height: 30px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .typesList{
+            ul{
+                display: grid;
+                grid-template-columns: 50% 50%;
+
+                li{
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    list-style: none;
+
+                    &::before{
+                        content: none;
+                    }
+
+                    .typeIcon{
+                        margin-right: 5px;
+                        img{
+                            width: 25px;
+                            height: 25px;
+                        }
+                    }
+                }
             }
         }
     }
@@ -414,6 +459,34 @@ $basic-color-hover: #0288d1;
                     }
                 }
             }
+
+            .typesList{
+                ul{
+                    display: grid;
+                    grid-template-columns: 25% 25% 25% 25%;
+
+                    li{
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: center;
+                        list-style: none;
+
+                        &::before{
+                            content: none;
+                        }
+
+                        .typeIcon{
+                            margin-right: 5px;
+                            img{
+                                width: 30px;
+                                height: 30px;
+                            }
+                        }
+                    }
+                }
+            }
+
             .benefitsList{
                 ul{
                     display: grid;
@@ -432,8 +505,8 @@ $basic-color-hover: #0288d1;
                         .benefitIcon{
                             margin-right: 5px;
                             img{
-                                width: 25px;
-                                height: 25px;
+                                width: 30px;
+                                height: 30px;
                             }
                         }
                     }
